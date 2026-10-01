@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: var(--font-playfair);
+  --font-cormorant: var(--font-cormorant);
+  --font-script: var(--font-great-vibes);
+  --font-sans: var(--font-jakarta);
+
+  --color-sage-50: #FAFAF6;
+  --color-sage-100: #F1F4E8;
+  --color-sage-200: #E0E6CF;
+  --color-sage-300: #C9D2AF;
+  --color-sage-400: #AEB98A;
+  --color-sage-500: #939F67;
+  --color-sage-600: #737E4C;
+  --color-sage-700: #57603B;
+  --color-sage-800: #474F32;
+  --color-sage-900: #3D432D;
+  --color-sage-950: #222617;
+
+  --color-gold-100: #F9F5EC;
+  --color-gold-200: #EFE3CA;
+  --color-gold-300: #DFCA99;
+  --color-gold-400: #CEAC65;
+  --color-gold-500: #C29841;
+  --color-gold-600: #A47D2C;
+  --color-gold-700: #7F5E20;
+
+  --color-cream-50: #FCFBF9;
+  --color-cream-100: #F8F6F0;
+  --color-cream-200: #F0EBE1;
+  --color-cream-300: #E6DECE;
+  
+  --color-ink: #1A1F1D;
+
+  --shadow-glass: 0 8px 32px 0 rgba(20, 32, 26, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  --shadow-glass-dark: 0 8px 32px 0 rgba(10, 16, 13, 0.35), inset 0 0 0 1px rgba(212, 175, 55, 0.25);
+  --shadow-luxury: 0 20px 45px -10px rgba(42, 63, 53, 0.15);
+}
+
+:root {
+  --background: #FCFBF9;
+  --foreground: #1A1F1D;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+body.locked {
+  overflow: hidden;
+}
+
+/* Custom refined animations & blur backdrop utilities */
+.bg-pattern {
+  background-image: radial-gradient(rgba(212, 175, 55, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.gold-shimmer {
+  background: linear-gradient(135deg, #ECC876 0%, #C29841 50%, #EFDAA2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border-gradient {
+  border-image: linear-gradient(to right, rgba(212,175,55,0.1), rgba(212,175,55,0.6), rgba(212,175,55,0.1)) 1;
+}
+
+/* Modal animation styles */
+.modal-active {
+  display: flex !important;
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+/* Elegant custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F8F6F0;
+}
+::-webkit-scrollbar-thumb {
+  background: #CADBD1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #759B85;
+}
+
+/* Ajustes específicos de encuadre para fotos (ej. enfocar anillo y manos) */
+img[src*="FOTO_18"] {
+  object-position: center 0% !important;
+}
