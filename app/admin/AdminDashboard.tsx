@@ -575,8 +575,9 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
+    )}
 
-      {/* Modal Crear */}
+    {/* Modal Crear */}
       {modalCreate.show && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-sage-900/40 backdrop-blur-sm animate-fade-in">
           <div className="bg-white rounded-3xl shadow-xl max-w-sm w-full p-6 animate-scale-in">
