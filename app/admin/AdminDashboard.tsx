@@ -377,7 +377,7 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-3xl shadow-xl max-w-sm w-full p-6 animate-scale-in">
             <h3 className="font-serif text-2xl text-sage-900 mb-2">Confirmar Invitación</h3>
             <p className="text-sage-600 text-sm mb-6">
-              Estás a punto de crear una invitación para <strong className="text-sage-900">{nuevoNombre}</strong> con <strong className="text-sage-900">{nuevosPases} pase{nuevosPases > 1 ? 's' : ''}</strong>. 
+              Estás a punto de crear una invitación para <strong className="text-sage-900">{nuevoNombre}</strong> con <strong className="text-sage-900">{nuevosPases} pase{Number(nuevosPases) > 1 ? 's' : ''}</strong>. 
               Por favor, verifica que la información sea correcta antes de continuar.
             </p>
             <div className="flex gap-3 justify-end">
