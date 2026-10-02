@@ -39,15 +39,35 @@ export default function AdminDashboard() {
 
   const supabase = createBrowserSupabaseClient();
 
+  const [fechaLimite, setFechaLimite] = useState<string>("2026-10-15");
+  const [guardandoFecha, setGuardandoFecha] = useState(false);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       setHostUrl(window.location.origin);
     }
-    fetchInvitados();
+    fetchData();
   }, []);
 
-  const fetchInvitados = async () => {
+  const fetchData = async () => {
     setLoading(true);
+    await Promise.all([fetchInvitados(), fetchConfig()]);
+    setLoading(false);
+  };
+
+  const fetchConfig = async () => {
+    try {
+      const res = await fetch('/api/configuracion');
+      const data = await res.json();
+      if (data.fecha_limite) {
+        setFechaLimite(data.fecha_limite);
+      }
+    } catch (err) {
+      console.error("Error al cargar configuración", err);
+    }
+  };
+
+  const fetchInvitados = async () => {
     const { data, error } = await supabase
       .from('invitados')
       .select('*')
@@ -55,11 +75,30 @@ export default function AdminDashboard() {
       
     if (error) {
       console.error("Error fetching invitados:", error);
-      alert("Error al cargar los datos.");
+      showToast("Error al cargar los datos.", 'error');
     } else {
       setInvitados(data || []);
     }
-    setLoading(false);
+  };
+
+  const updateFechaLimite = async (nuevaFecha: string) => {
+    setFechaLimite(nuevaFecha);
+    setGuardandoFecha(true);
+    try {
+      const res = await fetch('/api/configuracion', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fecha_limite: nuevaFecha })
+      });
+      const result = await res.json();
+      if (result.error) throw new Error(result.error);
+      showToast("Fecha límite actualizada con éxito.", 'success');
+    } catch (err) {
+      console.error("Error actualizando fecha límite", err);
+      showToast("Error al actualizar la fecha.", 'error');
+    } finally {
+      setGuardandoFecha(false);
+    }
   };
 
   const generarCodigo = () => {
@@ -164,13 +203,28 @@ export default function AdminDashboard() {
             <h1 className="font-serif text-4xl text-sage-950">Panel de Administración</h1>
             <p className="text-sage-600 mt-2">Gestión de invitaciones y confirmaciones de asistencia.</p>
           </div>
-          <div className="bg-white px-5 py-3 rounded-2xl border border-sage-200 shadow-sm flex items-center gap-3">
-            <Users className="w-5 h-5 text-gold-500" />
-            <div>
-              <p className="text-xs text-sage-500 uppercase tracking-wider font-semibold">Total Personas</p>
-              <p className={`text-xl font-bold font-serif ${totalPases >= MAX_PERSONAS ? 'text-red-500' : 'text-sage-900'}`}>
-                {totalPases} <span className="text-sm font-normal text-sage-400">/ {MAX_PERSONAS}</span>
-              </p>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="bg-white px-5 py-3 rounded-2xl border border-sage-200 shadow-sm flex items-center gap-3">
+              <Clock className="w-5 h-5 text-gold-500" />
+              <div className="flex flex-col items-start">
+                <p className="text-xs text-sage-500 uppercase tracking-wider font-semibold">Cierre de RSVPs</p>
+                <input 
+                  type="date"
+                  value={fechaLimite}
+                  onChange={(e) => updateFechaLimite(e.target.value)}
+                  disabled={guardandoFecha}
+                  className="text-sm font-bold font-serif text-sage-900 focus:outline-none focus:ring-1 focus:ring-gold-400 rounded px-1 -ml-1 mt-0.5"
+                />
+              </div>
+            </div>
+            <div className="bg-white px-5 py-3 rounded-2xl border border-sage-200 shadow-sm flex items-center gap-3">
+              <Users className="w-5 h-5 text-gold-500" />
+              <div>
+                <p className="text-xs text-sage-500 uppercase tracking-wider font-semibold">Total Personas</p>
+                <p className={`text-xl font-bold font-serif ${totalPases >= MAX_PERSONAS ? 'text-red-500' : 'text-sage-900'}`}>
+                  {totalPases} <span className="text-sm font-normal text-sage-400">/ {MAX_PERSONAS}</span>
+                </p>
+              </div>
             </div>
           </div>
         </header>

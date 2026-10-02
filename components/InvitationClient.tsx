@@ -14,7 +14,7 @@ interface Invitado {
   mensaje_personalizado?: string;
 }
 
-export default function InvitationClient({ invitado }: { invitado: Invitado }) {
+export default function InvitationClient({ invitado, fechaLimite }: { invitado: Invitado, fechaLimite: string }) {
   const [opened, setOpened] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -57,7 +57,6 @@ export default function InvitationClient({ invitado }: { invitado: Invitado }) {
     };
   }, []);
 
-  // Manejar apertura y fade-in del audio
   useEffect(() => {
     if (!opened) {
       document.body.classList.add('overflow-hidden');
@@ -90,6 +89,12 @@ export default function InvitationClient({ invitado }: { invitado: Invitado }) {
     }
     return () => document.body.classList.remove('overflow-hidden');
   }, [opened]);
+
+  const [year, month, day] = fechaLimite.split('-');
+  const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+  const formattedLimite = `${parseInt(day)} de ${meses[parseInt(month) - 1]} de ${year}`;
+  // Aseguramos la comparación con el final del día en hora local aproximada
+  const isExpired = new Date() > new Date(`${fechaLimite}T23:59:59`);
 
   useEffect(() => {
     const targetDate = new Date('2026-11-14T16:00:00').getTime();
@@ -489,13 +494,14 @@ export default function InvitationClient({ invitado }: { invitado: Invitado }) {
                   </span>
                 </div>
                 
-                <p className="text-[11px] text-sage-500 uppercase tracking-widest mt-2">Por favor responder antes del 15 de Octubre de 2026</p>
+                <p className="text-[11px] text-sage-500 uppercase tracking-widest mt-2">Por favor responder antes del {formattedLimite}</p>
               </div>
               <RSVPForm 
                 id={invitado.id} 
                 inicialConfirmado={invitado.confirmado} 
                 nombre={invitado.nombre} 
                 pases={invitado.pases} 
+                isExpired={isExpired}
               />
             </div>
           </div>

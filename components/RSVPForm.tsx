@@ -9,9 +9,10 @@ interface RSVPFormProps {
   inicialConfirmado: boolean | null;
   nombre: string;
   pases: number;
+  isExpired?: boolean;
 }
 
-export default function RSVPForm({ id, inicialConfirmado, nombre, pases }: RSVPFormProps) {
+export default function RSVPForm({ id, inicialConfirmado, nombre, pases, isExpired = false }: RSVPFormProps) {
   const [attendance, setAttendance] = useState(inicialConfirmado === true ? "confirmed" : inicialConfirmado === false ? "declined" : "confirmed");
   const [guestMessage, setGuestMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -60,6 +61,21 @@ export default function RSVPForm({ id, inicialConfirmado, nombre, pases }: RSVPF
       setLoading(false);
     }
   };
+
+  if (isExpired && inicialConfirmado === null && !success) {
+    return (
+      <div className="mt-8 p-6 rounded-2xl border text-center animate-fade-in bg-gray-50 border-gray-200 text-gray-700">
+        <HeartCrack className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+        <h4 className="font-serif font-bold text-xl mb-1">
+          Tiempo Expirado
+        </h4>
+        <p className="text-sm opacity-80 mt-2 max-w-sm mx-auto">
+          El periodo para confirmar asistencia ha finalizado. 
+          Si crees que hay un error o necesitas comunicarte con nosotros, por favor contáctanos directamente.
+        </p>
+      </div>
+    );
+  }
 
   if (inicialConfirmado !== null && !success) {
     return (

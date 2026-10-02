@@ -20,5 +20,13 @@ export default async function InvitacionPage({ params }: { params: Promise<{ cod
     notFound();
   }
 
-  return <InvitationClient invitado={invitado} />;
+  const { data: config } = await supabase
+    .from('configuracion')
+    .select('fecha_limite')
+    .eq('id', 1)
+    .single();
+
+  const fechaLimite = config?.fecha_limite || '2026-10-15';
+
+  return <InvitationClient invitado={invitado} fechaLimite={fechaLimite} />;
 }
