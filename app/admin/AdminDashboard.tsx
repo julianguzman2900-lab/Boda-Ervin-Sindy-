@@ -32,6 +32,13 @@ export default function AdminDashboard() {
   const [modalCreate, setModalCreate] = useState<{ show: boolean }>({ show: false });
   const [toast, setToast] = useState<{ show: boolean, message: string, type: 'success' | 'error' }>({ show: false, message: "", type: "success" });
 
+  // Dev Mode State
+  const [devModeUnlocked, setDevModeUnlocked] = useState(false);
+  const [devClickCount, setDevClickCount] = useState(0);
+  const [modalDevAuth, setModalDevAuth] = useState(false);
+  const [devPassword, setDevPassword] = useState("");
+  const [isDevCreate, setIsDevCreate] = useState(false);
+
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ show: true, message, type });
     setTimeout(() => setToast({ show: false, message: "", type }), 3000);
@@ -101,34 +108,36 @@ export default function AdminDashboard() {
     }
   };
 
-  const generarCodigo = () => {
-    return Math.random().toString(36).substring(2, 7).toUpperCase();
+  const generarCodigo = (isDev = false) => {
+    const code = Math.random().toString(36).substring(2, 7).toUpperCase();
+    return isDev ? `DEV-${code}` : code;
   };
 
-  const handleSubmitClick = (e: React.FormEvent) => {
+  const handleSubmitClick = (e: React.FormEvent, isDev: boolean = false) => {
     e.preventDefault();
     const pasesValue = typeof nuevosPases === 'number' ? nuevosPases : parseInt(nuevosPases) || 1;
 
     if (!nuevoNombre.trim() || pasesValue < 1) return;
     
-    if (totalPases + pasesValue > MAX_PERSONAS) {
+    if (!isDev && (totalPases + pasesValue > MAX_PERSONAS)) {
       showToast(`¡Límite excedido! Solo quedan ${MAX_PERSONAS - totalPases} lugares disponibles.`, 'error');
       return;
     }
 
+    setIsDevCreate(isDev);
     setModalCreate({ show: true });
   };
 
   const confirmarCrearInvitado = async () => {
     setModalCreate({ show: false });
     setCreando(true);
-    const codigo = generarCodigo();
+    const codigo = generarCodigo(isDevCreate);
 
     const res = await fetch('/api/invitados', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
-        nombre: nuevoNombre.trim(), 
+        nombre: isDevCreate && !nuevoNombre.startsWith('[DEV]') ? `[DEV] ${nuevoNombre.trim()}` : nuevoNombre.trim(), 
         pases: typeof nuevosPases === 'number' ? nuevosPases : parseInt(nuevosPases) || 1, 
         codigo: codigo,
         confirmado: null
@@ -177,13 +186,38 @@ export default function AdminDashboard() {
     showToast("¡Enlace copiado al portapapeles!", 'success');
   };
 
-  const totalInvitados = invitados.length;
-  const totalConfirmados = invitados.filter(i => i.confirmado === true).length;
-  const totalNoAsistiran = invitados.filter(i => i.confirmado === false).length;
-  const totalPendientes = invitados.filter(i => i.confirmado === null).length;
-  const totalPases = invitados.reduce((acc, curr) => acc + curr.pases, 0);
+  const handleTitleClick = () => {
+    if (devModeUnlocked) return;
+    const newCount = devClickCount + 1;
+    setDevClickCount(newCount);
+    if (newCount >= 5) {
+      setModalDevAuth(true);
+      setDevClickCount(0);
+    }
+  };
 
-  const invitadosFiltrados = invitados.filter(i => {
+  const handleDevAuth = () => {
+    if (devPassword === "julian29") {
+      setDevModeUnlocked(true);
+      setModalDevAuth(false);
+      showToast("Panel de desarrollador activado", "success");
+    } else {
+      showToast("Contraseña incorrecta", "error");
+    }
+    setDevPassword("");
+  };
+
+  const invitadosNormales = invitados.filter(i => !i.codigo.startsWith('DEV-'));
+  // Si estamos en devMode mostramos todos en la tabla, si no, solo los normales.
+  const listaBase = devModeUnlocked ? invitados : invitadosNormales;
+
+  const totalInvitados = invitadosNormales.length;
+  const totalConfirmados = invitadosNormales.filter(i => i.confirmado === true).length;
+  const totalNoAsistiran = invitadosNormales.filter(i => i.confirmado === false).length;
+  const totalPendientes = invitadosNormales.filter(i => i.confirmado === null).length;
+  const totalPases = invitadosNormales.reduce((acc, curr) => acc + curr.pases, 0);
+
+  const invitadosFiltrados = listaBase.filter(i => {
     if (filtro === "confirmadas") return i.confirmado === true;
     if (filtro === "no_asistiran") return i.confirmado === false;
     if (filtro === "pendientes") return i.confirmado === null;
@@ -200,7 +234,12 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto">
         <header className="mb-8 border-b border-sage-200 pb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="font-serif text-4xl text-sage-950">Panel de Administración</h1>
+            <h1 
+              onClick={handleTitleClick}
+              className="font-serif text-4xl text-sage-950 cursor-default select-none"
+            >
+              Panel de Administración {devModeUnlocked && <span className="text-sm text-gold-600 bg-gold-50 px-2 py-1 rounded ml-2 align-middle">DEV MODE</span>}
+            </h1>
             <p className="text-sage-600 mt-2">Gestión de invitaciones y confirmaciones de asistencia.</p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -263,13 +302,26 @@ export default function AdminDashboard() {
                 required
               />
             </div>
-            <button 
-              type="submit" 
-              disabled={creando || totalPases >= MAX_PERSONAS}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-sage-800 hover:bg-sage-900 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold tracking-wider uppercase text-sm transition-colors flex items-center justify-center gap-2"
-            >
-              {creando ? "Creando..." : <><Plus className="w-4 h-4" /> Crear</>}
-            </button>
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <button 
+                type="submit" 
+                onClick={(e) => handleSubmitClick(e, false)}
+                disabled={creando || totalPases >= MAX_PERSONAS}
+                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-sage-800 hover:bg-sage-900 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold tracking-wider uppercase text-sm transition-colors flex items-center justify-center gap-2"
+              >
+                {creando && !isDevCreate ? "Creando..." : <><Plus className="w-4 h-4" /> Crear</>}
+              </button>
+              {devModeUnlocked && (
+                <button 
+                  type="button" 
+                  onClick={(e) => handleSubmitClick(e as any, true)}
+                  disabled={creando}
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gold-600 hover:bg-gold-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold tracking-wider uppercase text-sm transition-colors flex items-center justify-center gap-2 shadow-md"
+                >
+                  {creando && isDevCreate ? "Creando..." : <><Plus className="w-4 h-4" /> Crear DEV</>}
+                </button>
+              )}
+            </div>
           </form>
           {totalPases >= MAX_PERSONAS && (
             <p className="text-red-500 text-sm mt-3 font-medium">Se ha alcanzado el límite de {MAX_PERSONAS} personas permitidas. No puedes crear más invitaciones.</p>
@@ -439,8 +491,8 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-3xl shadow-xl max-w-sm w-full p-6 animate-scale-in">
             <h3 className="font-serif text-2xl text-sage-900 mb-2">Confirmar Invitación</h3>
             <p className="text-sage-600 text-sm mb-6">
-              Estás a punto de crear una invitación para <strong className="text-sage-900">{nuevoNombre}</strong> con <strong className="text-sage-900">{nuevosPases} pase{Number(nuevosPases) > 1 ? 's' : ''}</strong>. 
-              Por favor, verifica que la información sea correcta antes de continuar.
+              Estás a punto de crear una invitación {isDevCreate ? <strong className="text-gold-600">DE DESARROLLADOR</strong> : ''} para <strong className="text-sage-900">{nuevoNombre}</strong> con <strong className="text-sage-900">{nuevosPases} pase{Number(nuevosPases) > 1 ? 's' : ''}</strong>. 
+              {isDevCreate ? " Esta invitación no afectará el límite máximo." : " Por favor, verifica que la información sea correcta antes de continuar."}
             </p>
             <div className="flex gap-3 justify-end">
               <button 
@@ -485,6 +537,41 @@ export default function AdminDashboard() {
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors shadow-sm"
               >
                 Eliminar definitivamente
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Dev Auth */}
+      {modalDevAuth && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-sage-900/40 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl shadow-xl max-w-sm w-full p-6 animate-scale-in border-t-4 border-gold-500">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-serif text-2xl text-sage-900">Acceso Desarrollador</h3>
+              <button onClick={() => setModalDevAuth(false)} className="text-sage-400 hover:text-sage-600">
+                <XCircle className="w-6 h-6" />
+              </button>
+            </div>
+            <p className="text-sage-600 text-sm mb-4">
+              Ingresa la contraseña para desbloquear las opciones de desarrollo y pruebas.
+            </p>
+            <input 
+              type="password"
+              value={devPassword}
+              onChange={e => setDevPassword(e.target.value)}
+              placeholder="Contraseña"
+              className="w-full px-4 py-3 rounded-xl border border-sage-300 focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-transparent transition-all mb-6"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleDevAuth();
+              }}
+            />
+            <div className="flex gap-3 justify-end">
+              <button 
+                onClick={handleDevAuth}
+                className="px-6 py-2 text-sm font-medium text-white bg-sage-900 hover:bg-black rounded-xl transition-colors shadow-sm w-full"
+              >
+                Desbloquear
               </button>
             </div>
           </div>
