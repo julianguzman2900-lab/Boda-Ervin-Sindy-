@@ -6,13 +6,13 @@ import { Smile, HeartCrack, Send, CheckCircle2 } from "lucide-react";
 
 interface RSVPFormProps {
   id: string;
-  inicialConfirmado: boolean;
+  inicialConfirmado: boolean | null;
   nombre: string;
   pases: number;
 }
 
 export default function RSVPForm({ id, inicialConfirmado, nombre, pases }: RSVPFormProps) {
-  const [attendance, setAttendance] = useState(inicialConfirmado ? "confirmed" : "confirmed");
+  const [attendance, setAttendance] = useState(inicialConfirmado === true ? "confirmed" : inicialConfirmado === false ? "declined" : "confirmed");
   const [guestMessage, setGuestMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -61,13 +61,41 @@ export default function RSVPForm({ id, inicialConfirmado, nombre, pases }: RSVPF
     }
   };
 
+  if (inicialConfirmado !== null && !success) {
+    return (
+      <div className={`mt-8 p-6 rounded-2xl border text-center animate-fade-in ${inicialConfirmado ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-red-50 border-red-200 text-red-900'}`}>
+        {inicialConfirmado ? (
+          <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto mb-3" />
+        ) : (
+          <HeartCrack className="w-10 h-10 text-red-500 mx-auto mb-3" />
+        )}
+        <h4 className="font-serif font-bold text-xl mb-1">
+          {inicialConfirmado ? "¡Asistencia Confirmada!" : "Asistencia Declinada"}
+        </h4>
+        <p className="text-sm opacity-80 mt-2 max-w-sm mx-auto">
+          {inicialConfirmado 
+            ? "Tu respuesta ya está registrada. ¡Nos emociona mucho compartir este día contigo!" 
+            : "Lamentamos que no puedas acompañarnos, pero agradecemos tu respuesta."}
+        </p>
+      </div>
+    );
+  }
+
   if (success) {
     return (
-      <div className="mt-8 p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-center animate-fade-in">
-        <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
-        <h4 className="font-serif font-bold text-lg text-emerald-950">¡Confirmación Guardada con Éxito!</h4>
-        <p className="text-xs text-emerald-800 mt-1">
-          Gracias por tu respuesta. Ha sido registrada exitosamente. ¡Nos vemos muy pronto!
+      <div className={`mt-8 p-6 rounded-2xl border text-center animate-fade-in ${attendance === 'confirmed' ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-red-50 border-red-200 text-red-900'}`}>
+        {attendance === 'confirmed' ? (
+          <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto mb-3" />
+        ) : (
+          <HeartCrack className="w-10 h-10 text-red-500 mx-auto mb-3" />
+        )}
+        <h4 className="font-serif font-bold text-xl mb-1">
+          {attendance === 'confirmed' ? "¡Confirmación Guardada con Éxito!" : "¡Respuesta Registrada!"}
+        </h4>
+        <p className="text-sm opacity-80 mt-2 max-w-sm mx-auto">
+          {attendance === 'confirmed' 
+            ? "Gracias por tu respuesta. Ha sido registrada exitosamente. ¡Nos vemos muy pronto!" 
+            : "Lamentamos que no puedas acompañarnos, gracias por notificarnos."}
         </p>
       </div>
     );
