@@ -1,14 +1,15 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+const getSupabaseAdmin = () => createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
 export async function POST(req: Request) {
   try {
     const data = await req.json();
+    const supabaseAdmin = getSupabaseAdmin();
     const { data: result, error } = await supabaseAdmin
       .from('invitados')
       .insert([data])
@@ -28,6 +29,7 @@ export async function DELETE(req: Request) {
     
     if (!id) throw new Error('No id provided');
     
+    const supabaseAdmin = getSupabaseAdmin();
     const { error } = await supabaseAdmin
       .from('invitados')
       .delete()
@@ -46,6 +48,7 @@ export async function PATCH(req: Request) {
 
     if (!id) throw new Error('No id provided');
 
+    const supabaseAdmin = getSupabaseAdmin();
     const { data: result, error } = await supabaseAdmin
       .from('invitados')
       .update({
