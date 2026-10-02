@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase";
-import { Trash2, Link as LinkIcon, Plus, Users, CheckCircle, XCircle, Clock } from "lucide-react";
+import { Trash2, Link as LinkIcon, Plus, Users, CheckCircle, XCircle, Clock, RefreshCw } from "lucide-react";
 
 interface Invitado {
   id: string;
@@ -204,6 +204,14 @@ export default function AdminDashboard() {
             <p className="text-sage-600 mt-2">Gestión de invitaciones y confirmaciones de asistencia.</p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4">
+            <button 
+              onClick={fetchData} 
+              disabled={loading}
+              className="bg-white p-3 rounded-full border border-sage-200 shadow-sm hover:bg-sage-50 transition-colors disabled:opacity-50"
+              title="Actualizar datos"
+            >
+              <RefreshCw className={`w-5 h-5 text-sage-600 ${loading ? 'animate-spin' : ''}`} />
+            </button>
             <div className="bg-white px-5 py-3 rounded-2xl border border-sage-200 shadow-sm flex items-center gap-3">
               <Clock className="w-5 h-5 text-gold-500" />
               <div className="flex flex-col items-start">

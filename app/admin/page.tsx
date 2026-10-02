@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminDashboard from "./AdminDashboard";
 
 export default function AdminPage() {
@@ -8,11 +8,17 @@ export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isAuth = sessionStorage.getItem('admin_auth');
+      if (isAuth === 'true') {
+        setIsAuthenticated(true);
+      }
+    }
+  }, []);
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Use an environment variable for the admin password, passed via a Server Action or just 
-    // a simple check if we are okay with it being somewhat client-side for this MVP.
-    // To be secure without a full backend, we'll use a server action to verify it.
     verifyPassword(password);
   };
 
@@ -25,6 +31,9 @@ export default function AdminPage() {
       });
       if (res.ok) {
         setIsAuthenticated(true);
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('admin_auth', 'true');
+        }
       } else {
         setError("Contraseña incorrecta");
       }
