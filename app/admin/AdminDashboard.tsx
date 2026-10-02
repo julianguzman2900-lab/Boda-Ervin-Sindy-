@@ -208,8 +208,9 @@ export default function AdminDashboard() {
   };
 
   const invitadosNormales = invitados.filter(i => !i.codigo.startsWith('DEV-'));
-  // Si estamos en devMode mostramos todos en la tabla, si no, solo los normales.
-  const listaBase = devModeUnlocked ? invitados : invitadosNormales;
+  const invitadosDev = invitados.filter(i => i.codigo.startsWith('DEV-'));
+
+  const listaBase = invitadosNormales;
 
   const totalInvitados = invitadosNormales.length;
   const totalConfirmados = invitadosNormales.filter(i => i.confirmado === true).length;
@@ -230,18 +231,118 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-sage-50/30 p-4 sm:p-8">
-      <div className="max-w-7xl mx-auto">
-        <header className="mb-8 border-b border-sage-200 pb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h1 
-              onClick={handleTitleClick}
-              className="font-serif text-4xl text-sage-950 cursor-default select-none"
-            >
-              Panel de Administración {devModeUnlocked && <span className="text-sm text-gold-600 bg-gold-50 px-2 py-1 rounded ml-2 align-middle">DEV MODE</span>}
-            </h1>
-            <p className="text-sage-600 mt-2">Gestión de invitaciones y confirmaciones de asistencia.</p>
+    <>
+      {devModeUnlocked ? (
+        <div className="min-h-screen bg-slate-950 text-slate-200 p-4 sm:p-8 font-sans">
+          <div className="max-w-7xl mx-auto">
+            <header className="mb-8 border-b border-slate-800 pb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-4xl font-bold text-amber-500 tracking-tight">DEV PANEL</h1>
+                <p className="text-slate-400 mt-2">Gestión aislada de invitaciones de prueba.</p>
+              </div>
+              <button 
+                onClick={() => setDevModeUnlocked(false)}
+                className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition-colors font-semibold shadow-sm border border-slate-700"
+              >
+                Salir de Dev Mode
+              </button>
+            </header>
+
+            <div className="bg-slate-900 p-6 rounded-3xl shadow-lg border border-slate-800 mb-8">
+              <h2 className="text-xl font-semibold text-slate-100 mb-4">Nueva Invitación DEV</h2>
+              <form onSubmit={(e) => handleSubmitClick(e, true)} className="flex flex-col sm:flex-row gap-4 items-end">
+                <div className="flex-1 w-full">
+                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Nombre de Prueba</label>
+                  <input 
+                    type="text" 
+                    value={nuevoNombre}
+                    onChange={e => setNuevoNombre(e.target.value)}
+                    placeholder="Ej. Juan Prueba"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+                    required
+                  />
+                </div>
+                <div className="w-full sm:w-32">
+                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Pases</label>
+                  <input 
+                    type="number" 
+                    min="1"
+                    value={nuevosPases}
+                    onChange={e => setNuevosPases(e.target.value === "" ? "" : parseInt(e.target.value))}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+                    required
+                  />
+                </div>
+                <button 
+                  type="submit" 
+                  disabled={creando}
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-bold tracking-wider uppercase text-sm transition-colors flex items-center justify-center gap-2"
+                >
+                  {creando ? "Creando..." : <><Plus className="w-4 h-4" /> Crear DEV</>}
+                </button>
+              </form>
+            </div>
+
+            <div className="bg-slate-900 rounded-3xl shadow-lg border border-slate-800 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead className="bg-slate-950 text-slate-400">
+                    <tr>
+                      <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Nombre</th>
+                      <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Código DEV</th>
+                      <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Pases</th>
+                      <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider text-right">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800">
+                    {invitadosDev.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
+                          No hay invitaciones de prueba.
+                        </td>
+                      </tr>
+                    ) : (
+                      invitadosDev.map((invitado) => (
+                        <tr key={invitado.id} className="hover:bg-slate-800/50 transition-colors">
+                          <td className="px-6 py-4 font-medium text-slate-200">{invitado.nombre}</td>
+                          <td className="px-6 py-4 font-mono text-sm text-amber-500">{invitado.codigo}</td>
+                          <td className="px-6 py-4 text-slate-300 font-medium">{invitado.pases}</td>
+                          <td className="px-6 py-4 text-right space-x-3">
+                            <button 
+                              onClick={() => copiarEnlace(invitado.codigo)}
+                              className="inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-medium bg-indigo-950/50 hover:bg-indigo-900/50 border border-indigo-900/50 px-3 py-1.5 rounded-lg transition-colors"
+                            >
+                              <LinkIcon className="w-3.5 h-3.5" /> Copiar Link
+                            </button>
+                            <button 
+                              onClick={() => solicitarEliminar(invitado.id, invitado.nombre)}
+                              className="inline-flex items-center gap-1.5 text-xs text-red-400 hover:text-red-300 font-medium bg-red-950/50 hover:bg-red-900/50 border border-red-900/50 px-3 py-1.5 rounded-lg transition-colors"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" /> Eliminar
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
+        </div>
+      ) : (
+        <div className="min-h-screen bg-sage-50/30 p-4 sm:p-8">
+          <div className="max-w-7xl mx-auto">
+            <header className="mb-8 border-b border-sage-200 pb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h1 
+                  onClick={handleTitleClick}
+                  className="font-serif text-4xl text-sage-950 cursor-default select-none"
+                >
+                  Panel de Administración
+                </h1>
+                <p className="text-sage-600 mt-2">Gestión de invitaciones y confirmaciones de asistencia.</p>
+              </div>
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <button 
               onClick={fetchData} 
@@ -309,18 +410,8 @@ export default function AdminDashboard() {
                 disabled={creando || totalPases >= MAX_PERSONAS}
                 className="w-full sm:w-auto px-6 py-3 rounded-xl bg-sage-800 hover:bg-sage-900 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold tracking-wider uppercase text-sm transition-colors flex items-center justify-center gap-2"
               >
-                {creando && !isDevCreate ? "Creando..." : <><Plus className="w-4 h-4" /> Crear</>}
+                {creando ? "Creando..." : <><Plus className="w-4 h-4" /> Crear</>}
               </button>
-              {devModeUnlocked && (
-                <button 
-                  type="button" 
-                  onClick={(e) => handleSubmitClick(e as any, true)}
-                  disabled={creando}
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gold-600 hover:bg-gold-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold tracking-wider uppercase text-sm transition-colors flex items-center justify-center gap-2 shadow-md"
-                >
-                  {creando && isDevCreate ? "Creando..." : <><Plus className="w-4 h-4" /> Crear DEV</>}
-                </button>
-              )}
             </div>
           </form>
           {totalPases >= MAX_PERSONAS && (
@@ -593,6 +684,6 @@ export default function AdminDashboard() {
           <span className="text-sm font-medium">{toast.message}</span>
         </div>
       )}
-    </div>
+    </>
   );
 }
