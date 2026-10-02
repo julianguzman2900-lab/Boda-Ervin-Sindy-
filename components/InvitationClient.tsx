@@ -234,13 +234,13 @@ export default function InvitationClient({ invitado }: { invitado: Invitado }) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm text-sage-900">
                   <div className="border-l-2 border-sage-200 pl-3 text-left">
                     <span className="block text-xs uppercase tracking-wider text-sage-500 font-semibold mb-1">Padres del Novio</span>
-                    <p className="font-serif font-medium text-base text-sage-950">Sr. Eward Alexander López</p>
-                    <p className="font-serif font-medium text-base text-sage-950">Sra. Jenifer Johana Guzmán</p>
+                    <p className="font-serif font-medium text-[15px] sm:text-base text-sage-950 whitespace-nowrap tracking-tight">Sr. Eward Alexander López</p>
+                    <p className="font-serif font-medium text-[15px] sm:text-base text-sage-950 whitespace-nowrap tracking-tight">Sra. Jenifer Johana Guzmán</p>
                   </div>
                   <div className="border-l-2 border-gold-300 pl-3 text-left">
                     <span className="block text-xs uppercase tracking-wider text-sage-500 font-semibold mb-1">Padres de la Novia</span>
-                    <p className="font-serif font-medium text-base text-sage-950">Sr. Roy Alfredo Salazar Donis</p>
-                    <p className="font-serif font-medium text-base text-sage-950">Sra. Evanelia Albanes Villeda</p>
+                    <p className="font-serif font-medium text-[15px] sm:text-base text-sage-950 whitespace-nowrap tracking-tight">Sr. Roy Alfredo Salazar Donis</p>
+                    <p className="font-serif font-medium text-[15px] sm:text-base text-sage-950 whitespace-nowrap tracking-tight">Sra. Evanelia Albanes Villeda</p>
                   </div>
                 </div>
               </div>
