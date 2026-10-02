@@ -248,9 +248,9 @@ export default function AdminDashboard() {
               </button>
             </header>
 
-            <div className="bg-slate-900 p-6 rounded-3xl shadow-lg border border-slate-800 mb-8">
+            <div className="bg-slate-900 p-4 sm:p-6 rounded-3xl shadow-lg border border-slate-800 mb-8">
               <h2 className="text-xl font-semibold text-slate-100 mb-4">Nueva Invitación DEV</h2>
-              <form onSubmit={(e) => handleSubmitClick(e, true)} className="flex flex-col sm:flex-row gap-4 items-end">
+              <form onSubmit={(e) => handleSubmitClick(e, true)} className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-end">
                 <div className="flex-1 w-full">
                   <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Nombre de Prueba</label>
                   <input 
@@ -304,19 +304,19 @@ export default function AdminDashboard() {
                     ) : (
                       invitadosDev.map((invitado) => (
                         <tr key={invitado.id} className="hover:bg-slate-800/50 transition-colors">
-                          <td className="px-6 py-4 font-medium text-slate-200">{invitado.nombre}</td>
-                          <td className="px-6 py-4 font-mono text-sm text-amber-500">{invitado.codigo}</td>
-                          <td className="px-6 py-4 text-slate-300 font-medium">{invitado.pases}</td>
-                          <td className="px-6 py-4 text-right space-x-3">
+                          <td className="px-6 py-4 font-medium text-slate-200 whitespace-nowrap">{invitado.nombre}</td>
+                          <td className="px-6 py-4 font-mono text-sm text-amber-500 whitespace-nowrap">{invitado.codigo}</td>
+                          <td className="px-6 py-4 text-slate-300 font-medium whitespace-nowrap">{invitado.pases}</td>
+                          <td className="px-6 py-4 text-right space-x-0 sm:space-x-3 space-y-2 sm:space-y-0 whitespace-nowrap">
                             <button 
                               onClick={() => copiarEnlace(invitado.codigo)}
-                              className="inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-medium bg-indigo-950/50 hover:bg-indigo-900/50 border border-indigo-900/50 px-3 py-1.5 rounded-lg transition-colors"
+                              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-medium bg-indigo-950/50 hover:bg-indigo-900/50 border border-indigo-900/50 px-3 py-2 rounded-lg transition-colors"
                             >
-                              <LinkIcon className="w-3.5 h-3.5" /> Copiar Link
+                              <LinkIcon className="w-3.5 h-3.5" /> Copiar
                             </button>
                             <button 
                               onClick={() => solicitarEliminar(invitado.id, invitado.nombre)}
-                              className="inline-flex items-center gap-1.5 text-xs text-red-400 hover:text-red-300 font-medium bg-red-950/50 hover:bg-red-900/50 border border-red-900/50 px-3 py-1.5 rounded-lg transition-colors"
+                              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs text-red-400 hover:text-red-300 font-medium bg-red-950/50 hover:bg-red-900/50 border border-red-900/50 px-3 py-2 rounded-lg transition-colors"
                             >
                               <Trash2 className="w-3.5 h-3.5" /> Eliminar
                             </button>
@@ -378,9 +378,9 @@ export default function AdminDashboard() {
         </header>
 
         {/* Formulario de Creación */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-sage-200 mb-8">
+        <div className="bg-white p-4 sm:p-6 rounded-3xl shadow-sm border border-sage-200 mb-8">
           <h2 className="font-serif text-2xl text-sage-900 mb-4">Nueva Invitación</h2>
-          <form onSubmit={handleSubmitClick} className="flex flex-col sm:flex-row gap-4 items-end">
+          <form onSubmit={handleSubmitClick} className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-end">
             <div className="flex-1 w-full">
               <label className="block text-xs font-semibold text-sage-600 uppercase tracking-wider mb-2">Nombre del Invitado / Familia</label>
               <input 
@@ -420,7 +420,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-sage-200">
             <p className="text-xs text-sage-500 uppercase tracking-wider font-semibold mb-1">Total Invitaciones</p>
             <p className="text-3xl text-sage-900 font-serif">{totalInvitados}</p>
@@ -525,17 +525,17 @@ export default function AdminDashboard() {
                   ) : (
                     invitadosFiltrados.map((invitado) => (
                       <tr key={invitado.id} className="hover:bg-sage-50/50 transition-colors">
-                        <td className="px-6 py-4 font-medium text-sage-900">
+                        <td className="px-6 py-4 font-medium text-sage-900 whitespace-nowrap">
                           <div className="flex items-center gap-2">
                             {invitado.nombre}
                             {invitado.mensaje_personalizado && invitado.mensaje_personalizado.trim() !== "" && (
-                              <span className="inline-block w-2 h-2 rounded-full bg-gold-400" title="Dejó un mensaje"></span>
+                              <span className="inline-block w-2 h-2 rounded-full bg-gold-400 flex-shrink-0" title="Dejó un mensaje"></span>
                             )}
                           </div>
                         </td>
-                        <td className="px-6 py-4 font-mono text-sm text-sage-600">{invitado.codigo}</td>
-                        <td className="px-6 py-4 text-sage-900 font-medium">{invitado.pases}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-4 font-mono text-sm text-sage-600 whitespace-nowrap">{invitado.codigo}</td>
+                        <td className="px-6 py-4 text-sage-900 font-medium whitespace-nowrap">{invitado.pases}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
                           {invitado.confirmado === true && (
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium border border-green-200">
                               <CheckCircle className="w-3.5 h-3.5" /> Sí Asistirá
@@ -552,16 +552,16 @@ export default function AdminDashboard() {
                             </span>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-right space-x-3">
+                        <td className="px-6 py-4 text-right space-x-0 sm:space-x-3 space-y-2 sm:space-y-0 whitespace-nowrap">
                           <button 
                             onClick={() => copiarEnlace(invitado.codigo)}
-                            className="inline-flex items-center gap-1.5 text-xs text-gold-600 hover:text-gold-700 font-medium bg-gold-50 hover:bg-gold-100 px-3 py-1.5 rounded-lg transition-colors"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs text-gold-600 hover:text-gold-700 font-medium bg-gold-50 hover:bg-gold-100 px-3 py-2 rounded-lg transition-colors"
                           >
-                            <LinkIcon className="w-3.5 h-3.5" /> Copiar Link
+                            <LinkIcon className="w-3.5 h-3.5" /> Copiar
                           </button>
                           <button 
                             onClick={() => solicitarEliminar(invitado.id, invitado.nombre)}
-                            className="inline-flex items-center gap-1.5 text-xs text-red-600 hover:text-red-700 font-medium bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs text-red-600 hover:text-red-700 font-medium bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
                           >
                             <Trash2 className="w-3.5 h-3.5" /> Eliminar
                           </button>
