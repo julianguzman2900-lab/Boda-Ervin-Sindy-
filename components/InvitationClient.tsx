@@ -367,7 +367,7 @@ export default function InvitationClient({ invitado, fechaLimite }: { invitado: 
                     <GlassWater className="w-7 h-7" />
                   </div>
                   <div className="inline-block px-3 py-1 rounded-full bg-gold-100 text-gold-800 text-[11px] uppercase tracking-wider font-semibold mb-3">
-                    18:00 Hrs • Recepción
+                    18:30 Hrs • Recepción
                   </div>
                   <h3 className="font-serif text-2xl text-sage-950 font-semibold mb-2">Recepción & Fiesta</h3>
                   <p className="text-xs uppercase tracking-widest text-gold-600 font-bold mb-4">Jardín de Recepción</p>
