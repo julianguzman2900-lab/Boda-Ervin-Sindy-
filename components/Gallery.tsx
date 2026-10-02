@@ -427,8 +427,8 @@ export default function Gallery({ images }: GalleryProps) {
               <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-gold-600 via-gold-500 to-gold-700 shadow-md border-t border-l border-gold-800/50" style={{ clipPath: 'polygon(100% 100%, 0 100%, 100% 0)' }}></div>
 
               <div className="text-center relative z-10 bg-sage-950/20 p-8 rounded-full border-2 border-gold-500/30 backdrop-blur-sm">
-                <div className="w-20 h-20 mx-auto mb-6 border-2 border-gold-400 p-2 rounded-full bg-sage-900/80 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
-                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1TsBNjZ4sfvSsi7KCvK2jhvvdKCX-4HauXvQswZ5mShDC6-kmS9wi5pw0WXpSdCGNh50FRtgSmZOiEET39GGsLQbAaYDaw1MInkHkBhJoXOz6zWeeK5zcwjn0-vBKQj72f3tHZ7ILIcp12GpBd8rk1DLYDUIWqZt5Sqlj0gkv16TuzEj43zRa_FCbZkEQ4gZYMmJtMVFUya--MWZFtZzbW19WVsfTtgrEzCfRe6JcwXbtWIqIfcO9" alt="Monograma" className="w-full h-full object-contain filter drop-shadow opacity-90" />
+                <div className="w-20 h-20 mx-auto mb-6 border-2 border-gold-400 p-0 rounded-full bg-sage-900/80 shadow-[0_0_15px_rgba(0,0,0,0.5)] overflow-hidden">
+                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1TsBNjZ4sfvSsi7KCvK2jhvvdKCX-4HauXvQswZ5mShDC6-kmS9wi5pw0WXpSdCGNh50FRtgSmZOiEET39GGsLQbAaYDaw1MInkHkBhJoXOz6zWeeK5zcwjn0-vBKQj72f3tHZ7ILIcp12GpBd8rk1DLYDUIWqZt5Sqlj0gkv16TuzEj43zRa_FCbZkEQ4gZYMmJtMVFUya--MWZFtZzbW19WVsfTtgrEzCfRe6JcwXbtWIqIfcO9" alt="Monograma" className="w-full h-full object-cover filter drop-shadow opacity-90 rounded-full" />
                 </div>
                 <p className="font-serif text-gold-400 text-2xl uppercase tracking-widest font-semibold" style={{ textShadow: "1px 1px 3px rgba(0,0,0,0.5)" }}>Lo mejor</p>
                 <p className="font-serif text-cream-200 text-sm uppercase tracking-[0.2em] mt-2 opacity-80">está por venir</p>
