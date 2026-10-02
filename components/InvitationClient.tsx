@@ -521,8 +521,22 @@ export default function InvitationClient({ invitado, fechaLimite }: { invitado: 
           <p className="font-cormorant text-lg italic text-cream-200/80 max-w-md mx-auto mb-8 font-light">
             "El amor nunca deja de ser." — 1 Corintios 13:8
           </p>
-          <div className="flex items-center gap-6 text-xs text-cream-300/60 uppercase tracking-widest">
+          <div className="flex items-center gap-6 text-xs text-cream-300/60 uppercase tracking-widest mb-12">
             <span>#BodaErvinYSindy</span>
+          </div>
+
+          {/* CRÉDITOS */}
+          <div className="w-full max-w-xs pt-6 border-t border-white/10 flex flex-col items-center gap-2">
+            <p className="text-[10px] text-cream-300/40 uppercase tracking-[0.2em]">Diseño y Desarrollo Web</p>
+            <p className="text-xs text-cream-200/70 font-light tracking-wide">José Julian López Guzmán</p>
+            <a 
+              href="https://wa.me/50241156055" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-xs text-gold-400/70 hover:text-gold-300 transition-colors flex items-center gap-1.5 mt-1"
+            >
+              <span>WhatsApp:</span> <span className="tracking-widest">+502 4115 6055</span>
+            </a>
           </div>
         </div>
       </footer>
