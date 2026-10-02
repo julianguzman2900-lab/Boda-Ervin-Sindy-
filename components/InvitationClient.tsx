@@ -128,8 +128,8 @@ export default function InvitationClient({ invitado, fechaLimite }: { invitado: 
         </div>
 
         <div className="relative z-10 w-full max-w-xl p-8 sm:p-12 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-glass-dark text-center text-white transform transition-all duration-700">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-6 relative flex items-center justify-center p-0 rounded-full border border-gold-300/60 bg-white shadow-xl overflow-hidden">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1TsBNjZ4sfvSsi7KCvK2jhvvdKCX-4HauXvQswZ5mShDC6-kmS9wi5pw0WXpSdCGNh50FRtgSmZOiEET39GGsLQbAaYDaw1MInkHkBhJoXOz6zWeeK5zcwjn0-vBKQj72f3tHZ7ILIcp12GpBd8rk1DLYDUIWqZt5Sqlj0gkv16TuzEj43zRa_FCbZkEQ4gZYMmJtMVFUya--MWZFtZzbW19WVsfTtgrEzCfRe6JcwXbtWIqIfcO9" alt="Monograma Ervin & Sindy" className="w-full h-full object-contain filter contrast-125 brightness-110 mix-blend-multiply scale-[1.15]" />
+          <div className="w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-6 relative flex items-center justify-center p-2 rounded-full border border-gold-300/40 bg-sage-900/40 shadow-inner">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1TsBNjZ4sfvSsi7KCvK2jhvvdKCX-4HauXvQswZ5mShDC6-kmS9wi5pw0WXpSdCGNh50FRtgSmZOiEET39GGsLQbAaYDaw1MInkHkBhJoXOz6zWeeK5zcwjn0-vBKQj72f3tHZ7ILIcp12GpBd8rk1DLYDUIWqZt5Sqlj0gkv16TuzEj43zRa_FCbZkEQ4gZYMmJtMVFUya--MWZFtZzbW19WVsfTtgrEzCfRe6JcwXbtWIqIfcO9" alt="Monograma Ervin & Sindy" className="w-full h-full object-contain filter drop-shadow-md" />
           </div>
 
           <p className="text-xs uppercase tracking-[0.35em] text-gold-300 font-medium mb-3">Nuestra Boda Soñada</p>
@@ -174,8 +174,8 @@ export default function InvitationClient({ invitado, fechaLimite }: { invitado: 
       <header className="fixed top-0 left-0 right-0 z-40 bg-white/75 backdrop-blur-md border-b border-sage-100 transition-all duration-300">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-18 py-3 flex items-center justify-between">
           <a href="#hero" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-full border border-gold-300 p-0 overflow-hidden bg-white shadow-sm">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1TsBNjZ4sfvSsi7KCvK2jhvvdKCX-4HauXvQswZ5mShDC6-kmS9wi5pw0WXpSdCGNh50FRtgSmZOiEET39GGsLQbAaYDaw1MInkHkBhJoXOz6zWeeK5zcwjn0-vBKQj72f3tHZ7ILIcp12GpBd8rk1DLYDUIWqZt5Sqlj0gkv16TuzEj43zRa_FCbZkEQ4gZYMmJtMVFUya--MWZFtZzbW19WVsfTtgrEzCfRe6JcwXbtWIqIfcO9" alt="Logo" className="w-full h-full object-contain filter contrast-125 brightness-110 mix-blend-multiply scale-[1.15]" />
+            <div className="w-10 h-10 rounded-full border border-gold-300/60 p-1 bg-sage-50/50">
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1TsBNjZ4sfvSsi7KCvK2jhvvdKCX-4HauXvQswZ5mShDC6-kmS9wi5pw0WXpSdCGNh50FRtgSmZOiEET39GGsLQbAaYDaw1MInkHkBhJoXOz6zWeeK5zcwjn0-vBKQj72f3tHZ7ILIcp12GpBd8rk1DLYDUIWqZt5Sqlj0gkv16TuzEj43zRa_FCbZkEQ4gZYMmJtMVFUya--MWZFtZzbW19WVsfTtgrEzCfRe6JcwXbtWIqIfcO9" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <span className="font-serif text-lg tracking-wider font-semibold text-sage-900 group-hover:text-gold-600 transition-colors">Ervin & Sindy</span>
@@ -468,8 +468,8 @@ export default function InvitationClient({ invitado, fechaLimite }: { invitado: 
         <section id="rsvp" className="py-20 px-4 sm:px-6 bg-gradient-to-b from-cream-50 via-sage-50 to-sage-100 relative">
           <div className="max-w-3xl mx-auto">
             <div className="rounded-3xl bg-white/90 backdrop-blur-xl p-8 sm:p-12 border border-sage-200 shadow-2xl relative overflow-hidden">
-              <div className="absolute -right-12 -bottom-12 w-64 h-64 opacity-10 pointer-events-none overflow-hidden rounded-full mix-blend-multiply filter contrast-125 brightness-110">
-                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1TsBNjZ4sfvSsi7KCvK2jhvvdKCX-4HauXvQswZ5mShDC6-kmS9wi5pw0WXpSdCGNh50FRtgSmZOiEET39GGsLQbAaYDaw1MInkHkBhJoXOz6zWeeK5zcwjn0-vBKQj72f3tHZ7ILIcp12GpBd8rk1DLYDUIWqZt5Sqlj0gkv16TuzEj43zRa_FCbZkEQ4gZYMmJtMVFUya--MWZFtZzbW19WVsfTtgrEzCfRe6JcwXbtWIqIfcO9" alt="watermark" className="w-full h-full object-contain" />
+              <div className="absolute -right-12 -bottom-12 w-64 h-64 opacity-5 pointer-events-none">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1TsBNjZ4sfvSsi7KCvK2jhvvdKCX-4HauXvQswZ5mShDC6-kmS9wi5pw0WXpSdCGNh50FRtgSmZOiEET39GGsLQbAaYDaw1MInkHkBhJoXOz6zWeeK5zcwjn0-vBKQj72f3tHZ7ILIcp12GpBd8rk1DLYDUIWqZt5Sqlj0gkv16TuzEj43zRa_FCbZkEQ4gZYMmJtMVFUya--MWZFtZzbW19WVsfTtgrEzCfRe6JcwXbtWIqIfcO9" alt="watermark" />
               </div>
 
               <div className="text-center mb-8">
@@ -512,8 +512,8 @@ export default function InvitationClient({ invitado, fechaLimite }: { invitado: 
       {/* FOOTER */}
       <footer className="bg-sage-950 text-cream-100 py-16 px-4 sm:px-6 text-center border-t border-gold-400/20">
         <div className="max-w-2xl mx-auto flex flex-col items-center">
-          <div className="w-16 h-16 rounded-full border border-gold-400 p-0 mb-4 bg-white overflow-hidden shadow-xl">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1TsBNjZ4sfvSsi7KCvK2jhvvdKCX-4HauXvQswZ5mShDC6-kmS9wi5pw0WXpSdCGNh50FRtgSmZOiEET39GGsLQbAaYDaw1MInkHkBhJoXOz6zWeeK5zcwjn0-vBKQj72f3tHZ7ILIcp12GpBd8rk1DLYDUIWqZt5Sqlj0gkv16TuzEj43zRa_FCbZkEQ4gZYMmJtMVFUya--MWZFtZzbW19WVsfTtgrEzCfRe6JcwXbtWIqIfcO9" alt="Ervin & Sindy Emblem" className="w-full h-full object-contain filter contrast-125 brightness-110 mix-blend-multiply scale-[1.15]" />
+          <div className="w-16 h-16 rounded-full border border-gold-400/40 p-2 mb-4 bg-sage-900/50">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1TsBNjZ4sfvSsi7KCvK2jhvvdKCX-4HauXvQswZ5mShDC6-kmS9wi5pw0WXpSdCGNh50FRtgSmZOiEET39GGsLQbAaYDaw1MInkHkBhJoXOz6zWeeK5zcwjn0-vBKQj72f3tHZ7ILIcp12GpBd8rk1DLYDUIWqZt5Sqlj0gkv16TuzEj43zRa_FCbZkEQ4gZYMmJtMVFUya--MWZFtZzbW19WVsfTtgrEzCfRe6JcwXbtWIqIfcO9" alt="Ervin & Sindy Emblem" className="w-full h-full object-contain filter drop-shadow" />
           </div>
           <h2 className="font-serif text-3xl font-light text-white mb-1">Ervin &amp; Sindy</h2>
           <p className="text-xs uppercase tracking-[0.3em] text-gold-400 font-medium mb-6">14 de Noviembre de 2026 • Para Siempre</p>
