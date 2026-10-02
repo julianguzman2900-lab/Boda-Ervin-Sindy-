@@ -186,8 +186,8 @@ export default function InvitationClient({ invitado }: { invitado: Invitado }) {
           </nav>
           <div className="flex items-center gap-3">
             <a href="#rsvp" className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full bg-sage-800 text-cream-50 hover:bg-sage-700 text-[10px] sm:text-xs uppercase tracking-widest font-semibold transition-all shadow-sm">
-              <span className="hidden sm:inline">Confirmar RSVP</span>
-              <span className="sm:hidden">RSVP</span>
+              <span className="hidden sm:inline">Confirmar Invitación</span>
+              <span className="sm:hidden">Confirmar</span>
               <Check className="w-3.5 h-3.5 text-gold-400" />
             </a>
           </div>
