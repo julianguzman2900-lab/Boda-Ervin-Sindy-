@@ -440,10 +440,22 @@ export default function InvitationClient({ invitado, fechaLimite }: { invitado: 
                     <p className="font-medium text-rose-800 text-sm">
                       Por favor, <strong className="text-rose-950 font-bold underline decoration-rose-300 underline-offset-2">abstenerse</strong> de usar los colores:
                     </p>
-                    <div className="flex flex-wrap justify-center gap-3 mt-4">
-                      <span className="px-4 py-1.5 bg-white border border-gray-200 rounded-full text-gray-700 text-xs font-bold shadow-sm">Blanco</span>
-                      <span className="px-4 py-1.5 bg-red-100 border border-red-200 rounded-full text-red-700 text-xs font-bold shadow-sm">Rojo</span>
-                      <span className="px-4 py-1.5 bg-[#808000]/10 border border-[#808000]/30 rounded-full text-[#556B2F] text-xs font-bold shadow-sm">Verde Olivo</span>
+                    <div className="flex flex-wrap justify-center gap-6 sm:gap-10 mt-5">
+                      <div className="flex flex-col items-center gap-2 relative">
+                        <div className="w-12 h-12 rounded-full bg-white border border-gray-300 shadow-md"></div>
+                        <span className="text-[10px] uppercase font-bold text-rose-900 tracking-wider">Blanco</span>
+                        <span className="text-[9px] uppercase font-bold text-rose-600 tracking-widest bg-rose-100/80 px-2 py-0.5 rounded-full">Restringido</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-2 relative">
+                        <div className="w-12 h-12 rounded-full bg-[#D32F2F] border border-red-900/30 shadow-md"></div>
+                        <span className="text-[10px] uppercase font-bold text-rose-900 tracking-wider">Rojo</span>
+                        <span className="text-[9px] uppercase font-bold text-rose-600 tracking-widest bg-rose-100/80 px-2 py-0.5 rounded-full">Restringido</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-2 relative">
+                        <div className="w-12 h-12 rounded-full bg-[#6B8E23] border border-[#556B2F]/40 shadow-md"></div>
+                        <span className="text-[10px] uppercase font-bold text-rose-900 tracking-wider">Verde Olivo</span>
+                        <span className="text-[9px] uppercase font-bold text-rose-600 tracking-widest bg-rose-100/80 px-2 py-0.5 rounded-full">Restringido</span>
+                      </div>
                     </div>
                   </div>
                 </div>
