@@ -422,9 +422,15 @@ export default function InvitationClient({ invitado, fechaLimite }: { invitado: 
                 </div>
               </div>
               
-              <div className="mt-6 inline-flex items-start sm:items-center gap-3 p-4 rounded-xl bg-gold-50/50 border border-gold-200/60 text-gold-900 text-sm text-left sm:text-center justify-center w-full shadow-sm">
-                <Info className="w-5 h-5 text-gold-600 shrink-0 mt-0.5 sm:mt-0" />
-                <span className="font-medium leading-snug">La ilustración es de referencia, pero sí deseamos que la vestimenta sea <strong>formal</strong> para acompañarnos el día del evento.</span>
+              <div className="mt-6 flex flex-col gap-3 p-4 rounded-xl bg-gold-50/50 border border-gold-200/60 text-gold-900 text-sm text-center shadow-sm">
+                <div className="flex items-start sm:items-center justify-center gap-3">
+                  <Info className="w-5 h-5 text-gold-600 shrink-0 mt-0.5 sm:mt-0" />
+                  <span className="font-medium leading-snug text-left sm:text-center">La ilustración es de referencia, pero sí deseamos que la vestimenta sea <strong>formal</strong>.</span>
+                </div>
+                <div className="pt-3 mt-1 border-t border-gold-200/60">
+                  <p className="font-bold text-sage-900 uppercase tracking-widest text-[11px] mb-1.5">Restricción de Colores</p>
+                  <p className="font-medium text-sage-800">Se reserva el uso de los colores <strong>Blanco, Rojo y Verde Olivo</strong>.</p>
+                </div>
               </div>
             </div>
           </div>
