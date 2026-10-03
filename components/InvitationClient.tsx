@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import RSVPForm from "./RSVPForm";
 import Gallery from "./Gallery";
-import { Sparkles, MailOpen, Heart, Crown, Calendar, MapPin, Church, Navigation, Info, Check, GlassWater, MailCheck, Ticket, Volume2, VolumeX } from "lucide-react";
+import { Sparkles, MailOpen, Heart, Crown, Calendar, MapPin, Church, Navigation, Info, Check, GlassWater, MailCheck, Ticket, Volume2, VolumeX, Ban } from "lucide-react";
 import { CldImage } from "next-cloudinary";
 
 interface Invitado {
@@ -422,14 +422,30 @@ export default function InvitationClient({ invitado, fechaLimite }: { invitado: 
                 </div>
               </div>
               
-              <div className="mt-6 flex flex-col gap-3 p-4 rounded-xl bg-gold-50/50 border border-gold-200/60 text-gold-900 text-sm text-center shadow-sm">
-                <div className="flex items-start sm:items-center justify-center gap-3">
+              <div className="mt-6 flex flex-col gap-4">
+                <div className="inline-flex items-start sm:items-center gap-3 p-4 rounded-xl bg-gold-50/50 border border-gold-200/60 text-gold-900 text-sm text-left sm:text-center justify-center w-full shadow-sm">
                   <Info className="w-5 h-5 text-gold-600 shrink-0 mt-0.5 sm:mt-0" />
-                  <span className="font-medium leading-snug text-left sm:text-center">La ilustración es de referencia, pero sí deseamos que la vestimenta sea <strong>formal</strong>.</span>
+                  <span className="font-medium leading-snug">La ilustración es de referencia, pero sí deseamos que la vestimenta sea <strong>formal</strong>.</span>
                 </div>
-                <div className="pt-3 mt-1 border-t border-gold-200/60">
-                  <p className="font-bold text-sage-900 uppercase tracking-widest text-[11px] mb-1.5">Restricción de Colores</p>
-                  <p className="font-medium text-sage-800">Se reserva el uso de los colores <strong>Blanco, Rojo y Verde Olivo</strong>.</p>
+                
+                <div className="relative overflow-hidden p-5 rounded-xl bg-rose-50 border-2 border-rose-200 shadow-md transition-transform hover:scale-[1.02]">
+                  <div className="absolute top-0 right-0 -mt-4 -mr-4 text-rose-100 opacity-50">
+                    <Ban className="w-24 h-24" />
+                  </div>
+                  <div className="relative z-10 flex flex-col items-center text-center">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-rose-100 text-rose-600 mb-2 shadow-sm">
+                      <Ban className="w-5 h-5" />
+                    </div>
+                    <p className="font-bold text-rose-900 uppercase tracking-widest text-[11px] mb-2">Restricción Importante</p>
+                    <p className="font-medium text-rose-800 text-sm">
+                      Por favor, <strong className="text-rose-950 font-bold underline decoration-rose-300 underline-offset-2">abstenerse</strong> de usar los colores:
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-3 mt-4">
+                      <span className="px-4 py-1.5 bg-white border border-gray-200 rounded-full text-gray-700 text-xs font-bold shadow-sm">Blanco</span>
+                      <span className="px-4 py-1.5 bg-red-100 border border-red-200 rounded-full text-red-700 text-xs font-bold shadow-sm">Rojo</span>
+                      <span className="px-4 py-1.5 bg-[#808000]/10 border border-[#808000]/30 rounded-full text-[#556B2F] text-xs font-bold shadow-sm">Verde Olivo</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
