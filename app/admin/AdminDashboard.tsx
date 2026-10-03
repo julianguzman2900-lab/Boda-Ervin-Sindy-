@@ -214,6 +214,7 @@ export default function AdminDashboard() {
 
   const totalInvitados = invitadosNormales.length;
   const totalConfirmados = invitadosNormales.filter(i => i.confirmado === true).length;
+  const totalPasesConfirmados = invitadosNormales.filter(i => i.confirmado === true).reduce((acc, curr) => acc + curr.pases, 0);
   const totalNoAsistiran = invitadosNormales.filter(i => i.confirmado === false).length;
   const totalPendientes = invitadosNormales.filter(i => i.confirmado === null).length;
   const totalPases = invitadosNormales.reduce((acc, curr) => acc + curr.pases, 0);
@@ -420,17 +421,24 @@ export default function AdminDashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-sage-200">
             <p className="text-xs text-sage-500 uppercase tracking-wider font-semibold mb-1">Total Invitaciones</p>
             <p className="text-3xl text-sage-900 font-serif">{totalInvitados}</p>
           </div>
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-sage-200 flex items-center justify-between">
             <div>
-              <p className="text-xs text-green-600 uppercase tracking-wider font-semibold mb-1">Asistirán</p>
+              <p className="text-xs text-green-600 uppercase tracking-wider font-semibold mb-1">Invitaciones Aceptadas</p>
               <p className="text-3xl text-sage-900 font-serif">{totalConfirmados}</p>
             </div>
             <CheckCircle className="w-8 h-8 text-green-500/20" />
+          </div>
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-green-200 bg-green-50/30 flex items-center justify-between">
+            <div>
+              <p className="text-xs text-green-700 uppercase tracking-wider font-bold mb-1">Pases Confirmados</p>
+              <p className="text-3xl text-green-800 font-serif">{totalPasesConfirmados}</p>
+            </div>
+            <Users className="w-8 h-8 text-green-500/30" />
           </div>
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-sage-200 flex items-center justify-between">
             <div>
