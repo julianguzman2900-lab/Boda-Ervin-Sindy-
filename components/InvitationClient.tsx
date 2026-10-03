@@ -428,33 +428,46 @@ export default function InvitationClient({ invitado, fechaLimite }: { invitado: 
                   <span className="font-medium leading-snug">La ilustración es de referencia, pero sí deseamos que la vestimenta sea <strong>formal</strong>.</span>
                 </div>
                 
-                <div className="relative overflow-hidden p-5 rounded-xl bg-rose-50 border-2 border-rose-200 shadow-md transition-transform hover:scale-[1.02]">
-                  <div className="absolute top-0 right-0 -mt-4 -mr-4 text-rose-100 opacity-50">
-                    <Ban className="w-24 h-24" />
-                  </div>
-                  <div className="relative z-10 flex flex-col items-center text-center">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-rose-100 text-rose-600 mb-2 shadow-sm">
-                      <Ban className="w-5 h-5" />
+                <div className="pt-6 mt-4 border-t border-cream-300">
+                  <p className="font-serif text-xl text-sage-900 mb-2">Colores Reservados</p>
+                  <p className="font-medium text-sage-700 text-sm mb-6 font-cormorant italic text-lg">
+                    Agradecemos de antemano <strong className="text-sage-950">no utilizar</strong> los siguientes colores en su vestimenta:
+                  </p>
+                  
+                  <div className="flex flex-wrap justify-center gap-6 sm:gap-12">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="relative flex items-center justify-center">
+                        <div className="w-14 h-14 rounded-full bg-white border border-gray-300 shadow-sm relative z-10"></div>
+                        <div className="absolute inset-0 rounded-full border border-red-500 scale-110 opacity-60"></div>
+                        <div className="absolute w-[120%] h-0.5 bg-red-500 -rotate-45 z-20 opacity-60"></div>
+                      </div>
+                      <div className="text-center">
+                        <span className="block text-[10px] uppercase font-bold text-sage-900 tracking-wider">Blanco</span>
+                        <span className="block text-[9px] uppercase font-bold text-sage-500 tracking-widest mt-1">Restringido</span>
+                      </div>
                     </div>
-                    <p className="font-bold text-rose-900 uppercase tracking-widest text-[11px] mb-2">Restricción Importante</p>
-                    <p className="font-medium text-rose-800 text-sm">
-                      Por favor, <strong className="text-rose-950 font-bold underline decoration-rose-300 underline-offset-2">abstenerse</strong> de usar los colores:
-                    </p>
-                    <div className="flex flex-wrap justify-center gap-6 sm:gap-10 mt-5">
-                      <div className="flex flex-col items-center gap-2 relative">
-                        <div className="w-12 h-12 rounded-full bg-white border border-gray-300 shadow-md"></div>
-                        <span className="text-[10px] uppercase font-bold text-rose-900 tracking-wider">Blanco</span>
-                        <span className="text-[9px] uppercase font-bold text-rose-600 tracking-widest bg-rose-100/80 px-2 py-0.5 rounded-full">Restringido</span>
+                    
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="relative flex items-center justify-center">
+                        <div className="w-14 h-14 rounded-full bg-[#8B0000] border border-red-900/40 shadow-sm relative z-10"></div>
+                        <div className="absolute inset-0 rounded-full border border-red-500 scale-110 opacity-60"></div>
+                        <div className="absolute w-[120%] h-0.5 bg-red-500 -rotate-45 z-20 opacity-60"></div>
                       </div>
-                      <div className="flex flex-col items-center gap-2 relative">
-                        <div className="w-12 h-12 rounded-full bg-[#D32F2F] border border-red-900/30 shadow-md"></div>
-                        <span className="text-[10px] uppercase font-bold text-rose-900 tracking-wider">Rojo</span>
-                        <span className="text-[9px] uppercase font-bold text-rose-600 tracking-widest bg-rose-100/80 px-2 py-0.5 rounded-full">Restringido</span>
+                      <div className="text-center">
+                        <span className="block text-[10px] uppercase font-bold text-sage-900 tracking-wider">Rojo</span>
+                        <span className="block text-[9px] uppercase font-bold text-sage-500 tracking-widest mt-1">Restringido</span>
                       </div>
-                      <div className="flex flex-col items-center gap-2 relative">
-                        <div className="w-12 h-12 rounded-full bg-[#6B8E23] border border-[#556B2F]/40 shadow-md"></div>
-                        <span className="text-[10px] uppercase font-bold text-rose-900 tracking-wider">Verde Olivo</span>
-                        <span className="text-[9px] uppercase font-bold text-rose-600 tracking-widest bg-rose-100/80 px-2 py-0.5 rounded-full">Restringido</span>
+                    </div>
+                    
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="relative flex items-center justify-center">
+                        <div className="w-14 h-14 rounded-full bg-[#556B2F] border border-[#3e4f21]/40 shadow-sm relative z-10"></div>
+                        <div className="absolute inset-0 rounded-full border border-red-500 scale-110 opacity-60"></div>
+                        <div className="absolute w-[120%] h-0.5 bg-red-500 -rotate-45 z-20 opacity-60"></div>
+                      </div>
+                      <div className="text-center">
+                        <span className="block text-[10px] uppercase font-bold text-sage-900 tracking-wider">Verde Olivo</span>
+                        <span className="block text-[9px] uppercase font-bold text-sage-500 tracking-widest mt-1">Restringido</span>
                       </div>
                     </div>
                   </div>
