@@ -14,6 +14,42 @@ interface Invitado {
   mensaje_personalizado: string;
 }
 
+interface DevMessageItem {
+  id: string;
+  invitadoId: string;
+  nombre: string;
+  codigo: string;
+  mensaje: string;
+  fecha: string;
+}
+
+const parseDevMessages = (inv: Invitado): DevMessageItem[] => {
+  if (!inv.mensaje_personalizado || !inv.mensaje_personalizado.trim()) return [];
+  try {
+    const parsed = JSON.parse(inv.mensaje_personalizado);
+    if (Array.isArray(parsed)) {
+      return parsed.map((item: any, idx: number) => ({
+        id: item.id || `${inv.id}-${idx}`,
+        invitadoId: inv.id,
+        nombre: inv.nombre,
+        codigo: inv.codigo,
+        mensaje: item.mensaje || String(item),
+        fecha: item.fecha || 'Reciente'
+      }));
+    }
+  } catch {
+    // Texto simple previo
+  }
+  return [{
+    id: `${inv.id}-legacy`,
+    invitadoId: inv.id,
+    nombre: inv.nombre,
+    codigo: inv.codigo,
+    mensaje: inv.mensaje_personalizado,
+    fecha: 'Anterior'
+  }];
+};
+
 const MAX_PERSONAS = 130;
 
 export default function AdminDashboard() {
@@ -194,7 +230,7 @@ export default function AdminDashboard() {
       body: JSON.stringify({
         id,
         confirmado: null,
-        mensaje_personalizado: null
+        limpiar_mensajes: true
       })
     });
     const result = await res.json();
@@ -202,7 +238,25 @@ export default function AdminDashboard() {
       showToast("Error al reiniciar la invitación.", 'error');
     } else {
       fetchInvitados();
-      showToast("Invitación reiniciada a pendiente.", 'success');
+      showToast("Invitación y mensajes reiniciados.", 'success');
+    }
+  };
+
+  const eliminarMensajeDev = async (invitadoId: string, mensajeId: string) => {
+    const res = await fetch('/api/invitados', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: invitadoId,
+        eliminar_mensaje_id: mensajeId
+      })
+    });
+    const result = await res.json();
+    if (result.error) {
+      showToast("Error al eliminar el mensaje.", 'error');
+    } else {
+      fetchInvitados();
+      showToast("Mensaje eliminado del historial.", 'success');
     }
   };
 
@@ -229,7 +283,9 @@ export default function AdminDashboard() {
 
   const invitadosNormales = invitados.filter(i => !i.codigo.startsWith('DEV-'));
   const invitadosDev = invitados.filter(i => i.codigo.startsWith('DEV-'));
-  const mensajesDev = invitadosDev.filter(i => i.mensaje_personalizado && i.mensaje_personalizado.trim() !== "");
+  const todosLosMensajesDev: DevMessageItem[] = invitadosDev
+    .flatMap(inv => parseDevMessages(inv))
+    .reverse();
 
   const listaBase = invitadosNormales;
 
@@ -305,7 +361,7 @@ export default function AdminDashboard() {
                 }`}
               >
                 <MessageSquare className="w-4 h-4" />
-                <span>Mensajes DEV ({mensajesDev.length})</span>
+                <span>Historial Mensajes DEV ({todosLosMensajesDev.length})</span>
               </button>
             </div>
 
@@ -314,33 +370,37 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between mb-2">
                   <h2 className="text-xl font-semibold text-slate-100 flex items-center gap-2">
                     <MessageSquare className="w-5 h-5 text-amber-500" />
-                    <span>Dedicatorias y Mensajes de Prueba</span>
+                    <span>Historial de Mensajes y Dedicatorias DEV</span>
                   </h2>
                   <span className="text-xs text-slate-400 font-mono">
-                    {mensajesDev.length} mensaje{mensajesDev.length !== 1 ? 's' : ''} recibido{mensajesDev.length !== 1 ? 's' : ''}
+                    {todosLosMensajesDev.length} mensaje{todosLosMensajesDev.length !== 1 ? 's' : ''} en total
                   </span>
                 </div>
 
-                {mensajesDev.length === 0 ? (
+                {todosLosMensajesDev.length === 0 ? (
                   <div className="bg-slate-900 rounded-3xl p-12 text-center border border-slate-800 text-slate-500">
                     <MessageSquare className="w-12 h-12 mx-auto mb-3 text-slate-600 opacity-50" />
-                    <p className="text-base font-medium text-slate-400">Aún no hay mensajes en las invitaciones de prueba.</p>
+                    <p className="text-base font-medium text-slate-400">Aún no hay mensajes en el historial.</p>
                     <p className="text-xs text-slate-500 mt-1">
-                      Cuando escribas una dedicatoria y confirmes desde una invitación DEV, aparecerá aquí aislada del panel principal.
+                      Todos los mensajes que envíes desde cualquier invitación DEV se acumularán aquí como historial sin borrarse.
                     </p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {mensajesDev.map((inv) => (
-                      <div key={inv.id} className="bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-md flex flex-col justify-between">
+                    {todosLosMensajesDev.map((msg) => (
+                      <div key={msg.id} className="bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-md flex flex-col justify-between">
                         <div>
                           <div className="flex items-center justify-between mb-3 border-b border-slate-800 pb-3">
                             <div>
-                              <p className="font-semibold text-slate-200 text-sm">{inv.nombre}</p>
-                              <span className="text-xs font-mono text-amber-500">{inv.codigo}</span>
+                              <p className="font-semibold text-slate-200 text-sm">{msg.nombre}</p>
+                              <div className="flex items-center gap-2 mt-0.5">
+                                <span className="text-xs font-mono text-amber-500">{msg.codigo}</span>
+                                <span className="text-[11px] text-slate-500">•</span>
+                                <span className="text-[11px] text-slate-400 font-medium">{msg.fecha}</span>
+                              </div>
                             </div>
                             <button
-                              onClick={() => copiarEnlace(inv.codigo)}
+                              onClick={() => copiarEnlace(msg.codigo)}
                               className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 bg-indigo-950/40 px-2.5 py-1 rounded-lg border border-indigo-900/40 transition-colors"
                             >
                               <LinkIcon className="w-3 h-3" /> Copiar enlace
@@ -349,23 +409,17 @@ export default function AdminDashboard() {
                           <div className="relative">
                             <span className="absolute -top-3 -left-1 text-3xl text-amber-500/30 font-serif">"</span>
                             <p className="text-slate-300 text-sm italic bg-slate-950/70 p-4 rounded-xl border border-slate-800 relative z-10 leading-relaxed font-serif">
-                              {inv.mensaje_personalizado}
+                              {msg.mensaje}
                             </p>
                           </div>
                         </div>
                         <div className="mt-4 pt-3 border-t border-slate-800/80 flex justify-end gap-2">
                           <button
-                            onClick={() => reiniciarEstado(inv.id)}
-                            className="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1.5 px-3 py-1.5 bg-amber-950/40 hover:bg-amber-900/40 rounded-lg border border-amber-900/50 transition-colors"
-                            title="Limpiar mensaje"
-                          >
-                            <RotateCcw className="w-3 h-3" /> Limpiar Mensaje
-                          </button>
-                          <button
-                            onClick={() => solicitarEliminar(inv.id, inv.nombre)}
+                            onClick={() => eliminarMensajeDev(msg.invitadoId, msg.id)}
                             className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1.5 px-3 py-1.5 bg-red-950/40 hover:bg-red-900/40 rounded-lg border border-red-900/50 transition-colors"
+                            title="Eliminar este mensaje del historial"
                           >
-                            <Trash2 className="w-3 h-3" /> Eliminar
+                            <Trash2 className="w-3 h-3" /> Eliminar Mensaje
                           </button>
                         </div>
                       </div>
@@ -435,14 +489,14 @@ export default function AdminDashboard() {
                               <td className="px-6 py-4 font-medium text-slate-200 whitespace-nowrap">
                                 <div className="flex items-center gap-2">
                                   <span>{invitado.nombre}</span>
-                                  {invitado.mensaje_personalizado && invitado.mensaje_personalizado.trim() !== "" && (
+                                  {parseDevMessages(invitado).length > 0 && (
                                     <button
                                       type="button"
                                       onClick={() => setFiltroDev("mensajes")}
                                       className="inline-flex items-center gap-1 text-[10px] font-mono text-amber-400 bg-amber-950/80 hover:bg-amber-900/80 px-2 py-0.5 rounded-full border border-amber-800/80 transition-colors"
-                                      title="Ver mensaje en pestaña Mensajes DEV"
+                                      title="Ver historial de mensajes"
                                     >
-                                      <MessageSquare className="w-2.5 h-2.5" /> Mensaje
+                                      <MessageSquare className="w-2.5 h-2.5" /> {parseDevMessages(invitado).length} {parseDevMessages(invitado).length === 1 ? 'mensaje' : 'mensajes'}
                                     </button>
                                   )}
                                 </div>
