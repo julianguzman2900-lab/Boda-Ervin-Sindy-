@@ -8,13 +8,18 @@ import { CldImage } from "next-cloudinary";
 
 interface Invitado {
   id: string;
+  codigo?: string;
   nombre: string;
   pases: number;
-  confirmado: boolean;
+  confirmado: boolean | null;
   mensaje_personalizado?: string;
 }
 
 export default function InvitationClient({ invitado, fechaLimite }: { invitado: Invitado, fechaLimite: string }) {
+  const isDev = Boolean(
+    (invitado.codigo && (invitado.codigo.toUpperCase().startsWith('DEV-') || invitado.codigo.toUpperCase() === 'DEMO1')) ||
+    (invitado.nombre && invitado.nombre.startsWith('[DEV]'))
+  );
   const [opened, setOpened] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -549,6 +554,7 @@ export default function InvitationClient({ invitado, fechaLimite }: { invitado: 
                 nombre={invitado.nombre} 
                 pases={invitado.pases} 
                 isExpired={isExpired}
+                isDev={isDev}
               />
             </div>
           </div>

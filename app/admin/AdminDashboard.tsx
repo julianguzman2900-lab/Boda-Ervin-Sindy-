@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase";
-import { Trash2, Link as LinkIcon, Plus, Users, CheckCircle, XCircle, Clock, RefreshCw } from "lucide-react";
+import { Trash2, Link as LinkIcon, Plus, Users, CheckCircle, XCircle, Clock, RefreshCw, RotateCcw } from "lucide-react";
 
 interface Invitado {
   id: string;
@@ -186,6 +186,25 @@ export default function AdminDashboard() {
     showToast("¡Enlace copiado al portapapeles!", 'success');
   };
 
+  const reiniciarEstado = async (id: string) => {
+    const res = await fetch('/api/invitados', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id,
+        confirmado: null,
+        mensaje_personalizado: null
+      })
+    });
+    const result = await res.json();
+    if (result.error) {
+      showToast("Error al reiniciar la invitación.", 'error');
+    } else {
+      fetchInvitados();
+      showToast("Invitación reiniciada a pendiente.", 'success');
+    }
+  };
+
   const handleTitleClick = () => {
     if (devModeUnlocked) return;
     const newCount = devClickCount + 1;
@@ -292,13 +311,14 @@ export default function AdminDashboard() {
                       <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Nombre</th>
                       <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Código DEV</th>
                       <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Pases</th>
+                      <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Estado</th>
                       <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider text-right">Acciones</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800">
                     {invitadosDev.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
+                        <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
                           No hay invitaciones de prueba.
                         </td>
                       </tr>
@@ -308,6 +328,23 @@ export default function AdminDashboard() {
                           <td className="px-6 py-4 font-medium text-slate-200 whitespace-nowrap">{invitado.nombre}</td>
                           <td className="px-6 py-4 font-mono text-sm text-amber-500 whitespace-nowrap">{invitado.codigo}</td>
                           <td className="px-6 py-4 text-slate-300 font-medium whitespace-nowrap">{invitado.pases}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {invitado.confirmado === true && (
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-950/80 text-green-400 rounded-full text-xs font-medium border border-green-800">
+                                <CheckCircle className="w-3.5 h-3.5" /> Confirmado
+                              </span>
+                            )}
+                            {invitado.confirmado === false && (
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-950/80 text-red-400 rounded-full text-xs font-medium border border-red-800">
+                                <XCircle className="w-3.5 h-3.5" /> Declinado
+                              </span>
+                            )}
+                            {invitado.confirmado === null && (
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-800 text-slate-400 rounded-full text-xs font-medium border border-slate-700">
+                                <Clock className="w-3.5 h-3.5" /> Pendiente
+                              </span>
+                            )}
+                          </td>
                           <td className="px-6 py-4 text-right space-x-0 sm:space-x-3 space-y-2 sm:space-y-0 whitespace-nowrap">
                             <button 
                               onClick={() => copiarEnlace(invitado.codigo)}
@@ -315,6 +352,15 @@ export default function AdminDashboard() {
                             >
                               <LinkIcon className="w-3.5 h-3.5" /> Copiar
                             </button>
+                            {invitado.confirmado !== null && (
+                              <button 
+                                onClick={() => reiniciarEstado(invitado.id)}
+                                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-medium bg-amber-950/50 hover:bg-amber-900/50 border border-amber-900/50 px-3 py-2 rounded-lg transition-colors"
+                                title="Reiniciar estado a pendiente"
+                              >
+                                <RotateCcw className="w-3.5 h-3.5" /> Reiniciar
+                              </button>
+                            )}
                             <button 
                               onClick={() => solicitarEliminar(invitado.id, invitado.nombre)}
                               className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs text-red-400 hover:text-red-300 font-medium bg-red-950/50 hover:bg-red-900/50 border border-red-900/50 px-3 py-2 rounded-lg transition-colors"

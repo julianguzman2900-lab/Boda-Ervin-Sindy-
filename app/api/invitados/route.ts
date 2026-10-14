@@ -48,12 +48,27 @@ export async function PATCH(req: Request) {
 
     if (!id) throw new Error('No id provided');
 
+    if (id === 'demo-id') {
+      return NextResponse.json({ success: true, data: [{ id: 'demo-id', confirmado, mensaje_personalizado: null }] });
+    }
+
     const supabaseAdmin = getSupabaseAdmin();
+
+    // Comprobar si es invitación de desarrollador (DEV-)
+    const { data: invitadoActual } = await supabaseAdmin
+      .from('invitados')
+      .select('codigo')
+      .eq('id', id)
+      .single();
+
+    const isDev = invitadoActual?.codigo?.startsWith('DEV-');
+
     const { data: result, error } = await supabaseAdmin
       .from('invitados')
       .update({
         confirmado,
-        mensaje_personalizado
+        // Las invitaciones de desarrollador no guardan dedicatoria en BD
+        mensaje_personalizado: isDev ? null : mensaje_personalizado
       })
       .eq('id', id)
       .select();

@@ -10,9 +10,10 @@ interface RSVPFormProps {
   nombre: string;
   pases: number;
   isExpired?: boolean;
+  isDev?: boolean;
 }
 
-export default function RSVPForm({ id, inicialConfirmado, nombre, pases, isExpired = false }: RSVPFormProps) {
+export default function RSVPForm({ id, inicialConfirmado, nombre, pases, isExpired = false, isDev = false }: RSVPFormProps) {
   const [attendance, setAttendance] = useState(inicialConfirmado === true ? "confirmed" : inicialConfirmado === false ? "declined" : "confirmed");
   const [guestMessage, setGuestMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,13 +29,14 @@ export default function RSVPForm({ id, inicialConfirmado, nombre, pases, isExpir
     
     try {
       // Actualizar a través de la API segura para saltar el bloqueo (RLS)
+      // Si es una invitación de desarrollador, el mensaje no se guarda en la base de datos
       const res = await fetch('/api/invitados', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id,
           confirmado: attendance === 'confirmed',
-          mensaje_personalizado: guestMessage.trim() !== "" ? guestMessage.trim() : null
+          mensaje_personalizado: isDev ? null : (guestMessage.trim() !== "" ? guestMessage.trim() : null)
         })
       });
 
@@ -46,7 +48,8 @@ export default function RSVPForm({ id, inicialConfirmado, nombre, pases, isExpir
       
       setSuccess(true);
       
-      if (attendance === "confirmed") {
+      // Solo redirige a WhatsApp si NO es invitación de desarrollador y asiste
+      if (!isDev && attendance === "confirmed") {
         const mensaje = `¡Hola Ervin y Sindy! ✨\nSoy *${nombre}* y me emociona confirmar mi asistencia a su boda.\n\n🎟️ *Pases confirmados:* ${pases}`;
         const telefonoWhatsApp = "50259482876"; 
         const whatsappUrl = `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(mensaje)}`;
