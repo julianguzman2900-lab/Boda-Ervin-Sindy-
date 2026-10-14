@@ -262,12 +262,23 @@ export default function AdminDashboard() {
                 <h1 className="text-4xl font-bold text-amber-500 tracking-tight">DEV PANEL</h1>
                 <p className="text-slate-400 mt-2">Gestión aislada de invitaciones de prueba.</p>
               </div>
-              <button 
-                onClick={() => setDevModeUnlocked(false)}
-                className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition-colors font-semibold shadow-sm border border-slate-700"
-              >
-                Salir de Dev Mode
-              </button>
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={fetchData} 
+                  disabled={loading}
+                  className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-amber-400 rounded-xl transition-colors font-semibold shadow-sm border border-slate-700 disabled:opacity-50 flex items-center gap-2 text-sm"
+                  title="Actualizar datos"
+                >
+                  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                  <span>Refrescar</span>
+                </button>
+                <button 
+                  onClick={() => setDevModeUnlocked(false)}
+                  className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition-colors font-semibold shadow-sm border border-slate-700 text-sm"
+                >
+                  Salir de Dev Mode
+                </button>
+              </div>
             </header>
 
             {/* Tabs DEV */}
