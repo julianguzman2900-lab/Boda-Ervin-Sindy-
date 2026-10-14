@@ -127,30 +127,30 @@ export default function InvitationClient({ invitado, fechaLimite }: { invitado: 
           <div className="absolute inset-0 bg-gradient-to-t from-sage-950/90 via-sage-900/60 to-sage-950/80"></div>
         </div>
 
-        <div className="relative z-10 w-full max-w-xl p-8 sm:p-12 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-glass-dark text-center text-white transform transition-all duration-700">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-6 relative flex items-center justify-center p-0 rounded-full border border-gold-300/40 bg-sage-900/40 shadow-inner overflow-hidden">
+        <div className="relative z-10 w-full max-w-xl max-h-[92vh] overflow-y-auto p-6 sm:p-10 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-glass-dark text-center text-white transform transition-all duration-700">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-5 relative flex items-center justify-center p-0 rounded-full border border-gold-300/40 bg-sage-900/40 shadow-inner overflow-hidden">
             <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1TsBNjZ4sfvSsi7KCvK2jhvvdKCX-4HauXvQswZ5mShDC6-kmS9wi5pw0WXpSdCGNh50FRtgSmZOiEET39GGsLQbAaYDaw1MInkHkBhJoXOz6zWeeK5zcwjn0-vBKQj72f3tHZ7ILIcp12GpBd8rk1DLYDUIWqZt5Sqlj0gkv16TuzEj43zRa_FCbZkEQ4gZYMmJtMVFUya--MWZFtZzbW19WVsfTtgrEzCfRe6JcwXbtWIqIfcO9" alt="Monograma Ervin & Sindy" className="w-full h-full object-contain filter drop-shadow-md rounded-full" />
           </div>
 
           <p className="text-xs uppercase tracking-[0.35em] text-gold-300 font-medium mb-3">Nuestra Boda Soñada</p>
           
-          <h1 className="font-serif text-4xl sm:text-5xl font-medium tracking-tight text-white mb-2">
-            Ervin <span className="font-script text-4xl sm:text-5xl text-gold-300 mx-1">&amp;</span> Sindy
+          <h1 className="font-serif text-3xl sm:text-5xl font-medium tracking-tight text-white mb-2">
+            Ervin <span className="font-script text-3xl sm:text-5xl text-gold-300 mx-1">&amp;</span> Sindy
           </h1>
           
-          <div className="flex items-center justify-center gap-3 my-5 opacity-75">
+          <div className="flex items-center justify-center gap-3 my-4 opacity-75">
             <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold-400"></div>
             <Sparkles className="w-4 h-4 text-gold-300" />
             <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold-400"></div>
           </div>
 
-          <div className="inline-block px-5 py-2.5 rounded-full bg-white/10 border border-white/15 backdrop-blur-md mb-8">
+          <div className="inline-block px-5 py-2 rounded-full bg-white/10 border border-white/15 backdrop-blur-md mb-6">
             <p className="text-xs text-cream-200 tracking-wider uppercase font-medium">Invitación especial para:</p>
             <p className="text-lg sm:text-xl font-serif text-white font-semibold mt-0.5 tracking-wide">{invitado.nombre}</p>
           </div>
 
-          <p className="text-sm sm:text-base text-cream-100/90 font-cormorant text-lg italic max-w-md mx-auto mb-8 font-normal leading-relaxed">
-            "{invitado.mensaje_personalizado || 'El amor no se mira con los ojos, sino con el alma. Nos llena de inmensa dicha compartir este momento sagrado con ustedes.'}"
+          <p className="text-sm sm:text-base text-cream-100/90 font-cormorant text-lg italic max-w-md mx-auto mb-7 font-normal leading-relaxed">
+            "El amor no se mira con los ojos, sino con el alma. Nos llena de inmensa dicha compartir este momento sagrado con ustedes."
           </p>
 
           <button 
@@ -158,7 +158,7 @@ export default function InvitationClient({ invitado, fechaLimite }: { invitado: 
               window.scrollTo(0, 0);
               setOpened(true);
             }}
-            className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-gold-500 via-gold-400 to-gold-600 text-sage-950 font-semibold text-sm uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all duration-300 shadow-xl shadow-gold-500/20"
+            className="group relative inline-flex items-center justify-center gap-3 px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-gold-500 via-gold-400 to-gold-600 text-sage-950 font-semibold text-sm uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all duration-300 shadow-xl shadow-gold-500/20"
           >
             <span>Abrir Invitación</span>
             <MailOpen className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
