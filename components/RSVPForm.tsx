@@ -29,14 +29,14 @@ export default function RSVPForm({ id, inicialConfirmado, nombre, pases, isExpir
     
     try {
       // Actualizar a través de la API segura para saltar el bloqueo (RLS)
-      // Si es una invitación de desarrollador, el mensaje no se guarda en la base de datos
+      // Para invitaciones dev, confirmado siempre queda null (pendiente) para permitir pruebas continuas
       const res = await fetch('/api/invitados', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id,
-          confirmado: attendance === 'confirmed',
-          mensaje_personalizado: isDev ? null : (guestMessage.trim() !== "" ? guestMessage.trim() : null)
+          confirmado: isDev ? null : (attendance === 'confirmed'),
+          mensaje_personalizado: guestMessage.trim() !== "" ? guestMessage.trim() : null
         })
       });
 
@@ -116,6 +116,13 @@ export default function RSVPForm({ id, inicialConfirmado, nombre, pases, isExpir
             ? "Gracias por tu respuesta. Ha sido registrada exitosamente. ¡Nos vemos muy pronto!" 
             : "Lamentamos que no puedas acompañarnos, gracias por notificarnos."}
         </p>
+        {isDev && (
+          <div className="mt-4 pt-3 border-t border-emerald-200/60">
+            <span className="text-xs text-emerald-800 font-medium bg-emerald-100/70 py-1.5 px-3 rounded-lg inline-block">
+              ℹ️ Invitación DEV: El mensaje se envió al Panel Dev y la invitación permanece en estado pendiente para pruebas continuas.
+            </span>
+          </div>
+        )}
       </div>
     );
   }

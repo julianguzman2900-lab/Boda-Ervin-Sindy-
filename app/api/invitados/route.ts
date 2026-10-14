@@ -66,9 +66,10 @@ export async function PATCH(req: Request) {
     const { data: result, error } = await supabaseAdmin
       .from('invitados')
       .update({
-        confirmado,
-        // Las invitaciones de desarrollador no guardan dedicatoria en BD
-        mensaje_personalizado: isDev ? null : mensaje_personalizado
+        // Si es de desarrollador, siempre guardamos confirmado como null para que siempre aparezca en pendiente
+        confirmado: isDev ? null : confirmado,
+        // El mensaje sí se guarda para que se pueda ver en el panel dev
+        mensaje_personalizado
       })
       .eq('id', id)
       .select();

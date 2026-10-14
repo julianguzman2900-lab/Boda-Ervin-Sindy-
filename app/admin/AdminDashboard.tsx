@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase";
-import { Trash2, Link as LinkIcon, Plus, Users, CheckCircle, XCircle, Clock, RefreshCw, RotateCcw } from "lucide-react";
+import { Trash2, Link as LinkIcon, Plus, Users, CheckCircle, XCircle, Clock, RefreshCw, RotateCcw, MessageSquare } from "lucide-react";
 
 interface Invitado {
   id: string;
@@ -38,6 +38,7 @@ export default function AdminDashboard() {
   const [modalDevAuth, setModalDevAuth] = useState(false);
   const [devPassword, setDevPassword] = useState("");
   const [isDevCreate, setIsDevCreate] = useState(false);
+  const [filtroDev, setFiltroDev] = useState<"todas" | "mensajes">("todas");
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ show: true, message, type });
@@ -228,6 +229,7 @@ export default function AdminDashboard() {
 
   const invitadosNormales = invitados.filter(i => !i.codigo.startsWith('DEV-'));
   const invitadosDev = invitados.filter(i => i.codigo.startsWith('DEV-'));
+  const mensajesDev = invitadosDev.filter(i => i.mensaje_personalizado && i.mensaje_personalizado.trim() !== "");
 
   const listaBase = invitadosNormales;
 
@@ -268,113 +270,223 @@ export default function AdminDashboard() {
               </button>
             </header>
 
-            <div className="bg-slate-900 p-4 sm:p-6 rounded-3xl shadow-lg border border-slate-800 mb-8">
-              <h2 className="text-xl font-semibold text-slate-100 mb-4">Nueva Invitación DEV</h2>
-              <form onSubmit={(e) => handleSubmitClick(e, true)} className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-end">
-                <div className="flex-1 w-full">
-                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Nombre de Prueba</label>
-                  <input 
-                    type="text" 
-                    value={nuevoNombre}
-                    onChange={e => setNuevoNombre(e.target.value)}
-                    placeholder="Ej. Juan Prueba"
-                    className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
-                    required
-                  />
-                </div>
-                <div className="w-full sm:w-32">
-                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Pases</label>
-                  <input 
-                    type="number" 
-                    min="1"
-                    value={nuevosPases}
-                    onChange={e => setNuevosPases(e.target.value === "" ? "" : parseInt(e.target.value))}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
-                    required
-                  />
-                </div>
-                <button 
-                  type="submit" 
-                  disabled={creando}
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-bold tracking-wider uppercase text-sm transition-colors flex items-center justify-center gap-2"
-                >
-                  {creando ? "Creando..." : <><Plus className="w-4 h-4" /> Crear DEV</>}
-                </button>
-              </form>
+            {/* Tabs DEV */}
+            <div className="flex gap-3 mb-6">
+              <button
+                type="button"
+                onClick={() => setFiltroDev("todas")}
+                className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
+                  filtroDev === "todas"
+                    ? "bg-amber-600 text-white shadow-md shadow-amber-600/20"
+                    : "bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-slate-800"
+                }`}
+              >
+                <Users className="w-4 h-4" />
+                <span>Invitaciones DEV ({invitadosDev.length})</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setFiltroDev("mensajes")}
+                className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
+                  filtroDev === "mensajes"
+                    ? "bg-amber-600 text-white shadow-md shadow-amber-600/20"
+                    : "bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-slate-200 border border-slate-800"
+                }`}
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>Mensajes DEV ({mensajesDev.length})</span>
+              </button>
             </div>
 
-            <div className="bg-slate-900 rounded-3xl shadow-lg border border-slate-800 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left">
-                  <thead className="bg-slate-950 text-slate-400">
-                    <tr>
-                      <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Nombre</th>
-                      <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Código DEV</th>
-                      <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Pases</th>
-                      <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Estado</th>
-                      <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider text-right">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800">
-                    {invitadosDev.length === 0 ? (
-                      <tr>
-                        <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
-                          No hay invitaciones de prueba.
-                        </td>
-                      </tr>
-                    ) : (
-                      invitadosDev.map((invitado) => (
-                        <tr key={invitado.id} className="hover:bg-slate-800/50 transition-colors">
-                          <td className="px-6 py-4 font-medium text-slate-200 whitespace-nowrap">{invitado.nombre}</td>
-                          <td className="px-6 py-4 font-mono text-sm text-amber-500 whitespace-nowrap">{invitado.codigo}</td>
-                          <td className="px-6 py-4 text-slate-300 font-medium whitespace-nowrap">{invitado.pases}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            {invitado.confirmado === true && (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-950/80 text-green-400 rounded-full text-xs font-medium border border-green-800">
-                                <CheckCircle className="w-3.5 h-3.5" /> Confirmado
-                              </span>
-                            )}
-                            {invitado.confirmado === false && (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-950/80 text-red-400 rounded-full text-xs font-medium border border-red-800">
-                                <XCircle className="w-3.5 h-3.5" /> Declinado
-                              </span>
-                            )}
-                            {invitado.confirmado === null && (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-800 text-slate-400 rounded-full text-xs font-medium border border-slate-700">
-                                <Clock className="w-3.5 h-3.5" /> Pendiente
-                              </span>
-                            )}
-                          </td>
-                          <td className="px-6 py-4 text-right space-x-0 sm:space-x-3 space-y-2 sm:space-y-0 whitespace-nowrap">
-                            <button 
-                              onClick={() => copiarEnlace(invitado.codigo)}
-                              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-medium bg-indigo-950/50 hover:bg-indigo-900/50 border border-indigo-900/50 px-3 py-2 rounded-lg transition-colors"
+            {filtroDev === "mensajes" ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-xl font-semibold text-slate-100 flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5 text-amber-500" />
+                    <span>Dedicatorias y Mensajes de Prueba</span>
+                  </h2>
+                  <span className="text-xs text-slate-400 font-mono">
+                    {mensajesDev.length} mensaje{mensajesDev.length !== 1 ? 's' : ''} recibido{mensajesDev.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
+
+                {mensajesDev.length === 0 ? (
+                  <div className="bg-slate-900 rounded-3xl p-12 text-center border border-slate-800 text-slate-500">
+                    <MessageSquare className="w-12 h-12 mx-auto mb-3 text-slate-600 opacity-50" />
+                    <p className="text-base font-medium text-slate-400">Aún no hay mensajes en las invitaciones de prueba.</p>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Cuando escribas una dedicatoria y confirmes desde una invitación DEV, aparecerá aquí aislada del panel principal.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {mensajesDev.map((inv) => (
+                      <div key={inv.id} className="bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-md flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center justify-between mb-3 border-b border-slate-800 pb-3">
+                            <div>
+                              <p className="font-semibold text-slate-200 text-sm">{inv.nombre}</p>
+                              <span className="text-xs font-mono text-amber-500">{inv.codigo}</span>
+                            </div>
+                            <button
+                              onClick={() => copiarEnlace(inv.codigo)}
+                              className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 bg-indigo-950/40 px-2.5 py-1 rounded-lg border border-indigo-900/40 transition-colors"
                             >
-                              <LinkIcon className="w-3.5 h-3.5" /> Copiar
+                              <LinkIcon className="w-3 h-3" /> Copiar enlace
                             </button>
-                            {invitado.confirmado !== null && (
-                              <button 
-                                onClick={() => reiniciarEstado(invitado.id)}
-                                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-medium bg-amber-950/50 hover:bg-amber-900/50 border border-amber-900/50 px-3 py-2 rounded-lg transition-colors"
-                                title="Reiniciar estado a pendiente"
-                              >
-                                <RotateCcw className="w-3.5 h-3.5" /> Reiniciar
-                              </button>
-                            )}
-                            <button 
-                              onClick={() => solicitarEliminar(invitado.id, invitado.nombre)}
-                              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs text-red-400 hover:text-red-300 font-medium bg-red-950/50 hover:bg-red-900/50 border border-red-900/50 px-3 py-2 rounded-lg transition-colors"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" /> Eliminar
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+                          </div>
+                          <div className="relative">
+                            <span className="absolute -top-3 -left-1 text-3xl text-amber-500/30 font-serif">"</span>
+                            <p className="text-slate-300 text-sm italic bg-slate-950/70 p-4 rounded-xl border border-slate-800 relative z-10 leading-relaxed font-serif">
+                              {inv.mensaje_personalizado}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="mt-4 pt-3 border-t border-slate-800/80 flex justify-end gap-2">
+                          <button
+                            onClick={() => reiniciarEstado(inv.id)}
+                            className="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1.5 px-3 py-1.5 bg-amber-950/40 hover:bg-amber-900/40 rounded-lg border border-amber-900/50 transition-colors"
+                            title="Limpiar mensaje"
+                          >
+                            <RotateCcw className="w-3 h-3" /> Limpiar Mensaje
+                          </button>
+                          <button
+                            onClick={() => solicitarEliminar(inv.id, inv.nombre)}
+                            className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1.5 px-3 py-1.5 bg-red-950/40 hover:bg-red-900/40 rounded-lg border border-red-900/50 transition-colors"
+                          >
+                            <Trash2 className="w-3 h-3" /> Eliminar
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
+            ) : (
+              <>
+                <div className="bg-slate-900 p-4 sm:p-6 rounded-3xl shadow-lg border border-slate-800 mb-8">
+                  <h2 className="text-xl font-semibold text-slate-100 mb-4">Nueva Invitación DEV</h2>
+                  <form onSubmit={(e) => handleSubmitClick(e, true)} className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-end">
+                    <div className="flex-1 w-full">
+                      <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Nombre de Prueba</label>
+                      <input 
+                        type="text" 
+                        value={nuevoNombre}
+                        onChange={e => setNuevoNombre(e.target.value)}
+                        placeholder="Ej. Juan Prueba"
+                        className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+                        required
+                      />
+                    </div>
+                    <div className="w-full sm:w-32">
+                      <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Pases</label>
+                      <input 
+                        type="number" 
+                        min="1"
+                        value={nuevosPases}
+                        onChange={e => setNuevosPases(e.target.value === "" ? "" : parseInt(e.target.value))}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+                        required
+                      />
+                    </div>
+                    <button 
+                      type="submit" 
+                      disabled={creando}
+                      className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-bold tracking-wider uppercase text-sm transition-colors flex items-center justify-center gap-2"
+                    >
+                      {creando ? "Creando..." : <><Plus className="w-4 h-4" /> Crear DEV</>}
+                    </button>
+                  </form>
+                </div>
+
+                <div className="bg-slate-900 rounded-3xl shadow-lg border border-slate-800 overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                      <thead className="bg-slate-950 text-slate-400">
+                        <tr>
+                          <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Nombre</th>
+                          <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Código DEV</th>
+                          <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Pases</th>
+                          <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider">Estado</th>
+                          <th className="px-6 py-4 font-semibold text-xs uppercase tracking-wider text-right">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800">
+                        {invitadosDev.length === 0 ? (
+                          <tr>
+                            <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                              No hay invitaciones de prueba.
+                            </td>
+                          </tr>
+                        ) : (
+                          invitadosDev.map((invitado) => (
+                            <tr key={invitado.id} className="hover:bg-slate-800/50 transition-colors">
+                              <td className="px-6 py-4 font-medium text-slate-200 whitespace-nowrap">
+                                <div className="flex items-center gap-2">
+                                  <span>{invitado.nombre}</span>
+                                  {invitado.mensaje_personalizado && invitado.mensaje_personalizado.trim() !== "" && (
+                                    <button
+                                      type="button"
+                                      onClick={() => setFiltroDev("mensajes")}
+                                      className="inline-flex items-center gap-1 text-[10px] font-mono text-amber-400 bg-amber-950/80 hover:bg-amber-900/80 px-2 py-0.5 rounded-full border border-amber-800/80 transition-colors"
+                                      title="Ver mensaje en pestaña Mensajes DEV"
+                                    >
+                                      <MessageSquare className="w-2.5 h-2.5" /> Mensaje
+                                    </button>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 font-mono text-sm text-amber-500 whitespace-nowrap">{invitado.codigo}</td>
+                              <td className="px-6 py-4 text-slate-300 font-medium whitespace-nowrap">{invitado.pases}</td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                {invitado.confirmado === true && (
+                                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-950/80 text-green-400 rounded-full text-xs font-medium border border-green-800">
+                                    <CheckCircle className="w-3.5 h-3.5" /> Confirmado
+                                  </span>
+                                )}
+                                {invitado.confirmado === false && (
+                                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-950/80 text-red-400 rounded-full text-xs font-medium border border-red-800">
+                                    <XCircle className="w-3.5 h-3.5" /> Declinado
+                                  </span>
+                                )}
+                                {invitado.confirmado === null && (
+                                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-950/40 text-amber-400 rounded-full text-xs font-medium border border-amber-900/40">
+                                    <Clock className="w-3.5 h-3.5" /> Pendiente (Reutilizable)
+                                  </span>
+                                )}
+                              </td>
+                              <td className="px-6 py-4 text-right space-x-0 sm:space-x-3 space-y-2 sm:space-y-0 whitespace-nowrap">
+                                <button 
+                                  onClick={() => copiarEnlace(invitado.codigo)}
+                                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-medium bg-indigo-950/50 hover:bg-indigo-900/50 border border-indigo-900/50 px-3 py-2 rounded-lg transition-colors"
+                                >
+                                  <LinkIcon className="w-3.5 h-3.5" /> Copiar
+                                </button>
+                                {(invitado.confirmado !== null || (invitado.mensaje_personalizado && invitado.mensaje_personalizado.trim() !== "")) && (
+                                  <button 
+                                    onClick={() => reiniciarEstado(invitado.id)}
+                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-medium bg-amber-950/50 hover:bg-amber-900/50 border border-amber-900/50 px-3 py-2 rounded-lg transition-colors"
+                                    title="Reiniciar estado y dedicatoria"
+                                  >
+                                    <RotateCcw className="w-3.5 h-3.5" /> Reiniciar
+                                  </button>
+                                )}
+                                <button 
+                                  onClick={() => solicitarEliminar(invitado.id, invitado.nombre)}
+                                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs text-red-400 hover:text-red-300 font-medium bg-red-950/50 hover:bg-red-900/50 border border-red-900/50 px-3 py-2 rounded-lg transition-colors"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" /> Eliminar
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       ) : (
